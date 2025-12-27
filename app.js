@@ -348,6 +348,18 @@ class CardhawkApp {
               </div>
             `).join('')}
           ` : ''}
+          
+          <!-- Report Error Button -->
+          <div class="card-report-section">
+            <button class="btn-report-error" data-card-id="${card.id}" data-card-name="${card.displayName}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Report Error
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -358,6 +370,17 @@ class CardhawkApp {
       e.stopPropagation(); // Prevent card swipe
       this.toggleCardDetails(index);
     });
+    
+    // Add click handler for Report Error button
+    const reportBtn = cardDiv.querySelector('.btn-report-error');
+    if (reportBtn) {
+      reportBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent card swipe
+        const cardId = reportBtn.dataset.cardId;
+        const cardName = reportBtn.dataset.cardName;
+        this.showCardFlagModal(cardId, cardName);
+      });
+    }
     
     return cardDiv;
   }
@@ -1317,13 +1340,16 @@ class CardhawkApp {
         const email = document.getElementById('signupEmail').value;
         const password = document.getElementById('signupPassword').value;
         const fullName = document.getElementById('signupName')?.value || '';
+        const state = document.getElementById('signupState')?.value || '';
+        const emailOptIn = document.getElementById('emailOptIn')?.checked || false;
         const submitBtn = signupForm.querySelector('button[type="submit"]');
         
         try {
           submitBtn.disabled = true;
           submitBtn.textContent = 'Creating account...';
           
-          await auth.signUp(email, password, fullName);
+          // Sign up with enhanced metadata
+          await auth.signUp(email, password, fullName, { state, emailOptIn });
           
           this.closeSignupScreen();
           this.showSuccessMessage('Account created! Check your email to verify your account, then login.');
@@ -1345,6 +1371,49 @@ class CardhawkApp {
         this.showForgotPasswordModal();
       }
     });
+    
+    // Password toggle buttons
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    if (toggleLoginPassword) {
+      toggleLoginPassword.addEventListener('click', () => {
+        const passwordInput = document.getElementById('loginPassword');
+        const eyeIcon = toggleLoginPassword.querySelector('.eye-icon');
+        const eyeOffIcon = toggleLoginPassword.querySelector('.eye-off-icon');
+        
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          eyeIcon.style.display = 'none';
+          eyeOffIcon.style.display = 'block';
+          toggleLoginPassword.setAttribute('aria-label', 'Hide password');
+        } else {
+          passwordInput.type = 'password';
+          eyeIcon.style.display = 'block';
+          eyeOffIcon.style.display = 'none';
+          toggleLoginPassword.setAttribute('aria-label', 'Show password');
+        }
+      });
+    }
+    
+    const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+    if (toggleSignupPassword) {
+      toggleSignupPassword.addEventListener('click', () => {
+        const passwordInput = document.getElementById('signupPassword');
+        const eyeIcon = toggleSignupPassword.querySelector('.eye-icon');
+        const eyeOffIcon = toggleSignupPassword.querySelector('.eye-off-icon');
+        
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          eyeIcon.style.display = 'none';
+          eyeOffIcon.style.display = 'block';
+          toggleSignupPassword.setAttribute('aria-label', 'Hide password');
+        } else {
+          passwordInput.type = 'password';
+          eyeIcon.style.display = 'block';
+          eyeOffIcon.style.display = 'none';
+          toggleSignupPassword.setAttribute('aria-label', 'Show password');
+        }
+      });
+    }
     
     // Forgot password form
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
@@ -1401,6 +1470,84 @@ class CardhawkApp {
     if (editProfileBtn) {
       editProfileBtn.addEventListener('click', () => {
         this.showProfileEditModal();
+      });
+    }
+    
+    // Send Feedback button
+    const sendFeedbackBtn = document.getElementById('sendFeedbackBtn');
+    if (sendFeedbackBtn) {
+      sendFeedbackBtn.addEventListener('click', () => {
+        this.showFeedbackModal();
+      });
+    }
+    
+    // Feedback form
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+      // Character count
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      const charCount = document.getElementById('feedbackCharCount');
+      
+      if (feedbackMessage && charCount) {
+        feedbackMessage.addEventListener('input', () => {
+          charCount.textContent = feedbackMessage.value.length;
+        });
+      }
+      
+      // Form submission
+      feedbackForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.submitFeedback();
+      });
+    }
+    
+    // Feedback modal close buttons
+    const closeFeedbackModal = document.getElementById('closeFeedbackModal');
+    if (closeFeedbackModal) {
+      closeFeedbackModal.addEventListener('click', () => {
+        this.closeFeedbackModal();
+      });
+    }
+    
+    const cancelFeedback = document.getElementById('cancelFeedback');
+    if (cancelFeedback) {
+      cancelFeedback.addEventListener('click', () => {
+        this.closeFeedbackModal();
+      });
+    }
+    
+    // Card Flag form
+    const cardFlagForm = document.getElementById('cardFlagForm');
+    if (cardFlagForm) {
+      // Character count
+      const flagComment = document.getElementById('flagComment');
+      const flagCharCount = document.getElementById('flagCharCount');
+      
+      if (flagComment && flagCharCount) {
+        flagComment.addEventListener('input', () => {
+          flagCharCount.textContent = flagComment.value.length;
+        });
+      }
+      
+      // Form submission
+      cardFlagForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.submitCardFlag();
+      });
+    }
+    
+    // Card flag modal close buttons
+    const closeCardFlagModal = document.getElementById('closeCardFlagModal');
+    if (closeCardFlagModal) {
+      closeCardFlagModal.addEventListener('click', () => {
+        this.closeCardFlagModal();
+      });
+    }
+    
+    const cancelCardFlag = document.getElementById('cancelCardFlag');
+    if (cancelCardFlag) {
+      cancelCardFlag.addEventListener('click', () => {
+        this.closeCardFlagModal();
       });
     }
     
@@ -2506,6 +2653,161 @@ class CardhawkApp {
     //     .then(reg => console.log('Service Worker registered'))
     //     .catch(err => console.log('Service Worker registration failed'));
     // }
+  }
+  
+  // Feedback Modal Methods
+  showFeedbackModal() {
+    if (!this.currentUser) {
+      alert('Please login to send feedback!');
+      this.showLoginScreen();
+      return;
+    }
+    
+    const modal = document.getElementById('feedbackModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+      
+      // Reset form
+      document.getElementById('feedbackPage').value = '';
+      document.getElementById('feedbackMessage').value = '';
+      document.getElementById('feedbackCharCount').textContent = '0';
+    }
+  }
+  
+  closeFeedbackModal() {
+    const modal = document.getElementById('feedbackModal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+    }
+  }
+  
+  async submitFeedback() {
+    const page = document.getElementById('feedbackPage').value;
+    const message = document.getElementById('feedbackMessage').value;
+    const submitBtn = document.querySelector('#feedbackForm button[type="submit"]');
+    
+    if (!page || !message) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    try {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+        Sending...
+      `;
+      
+      await db.submitFeedback(
+        this.currentUser.id,
+        this.currentUser.email,
+        page,
+        message
+      );
+      
+      this.closeFeedbackModal();
+      this.showSuccessMessage('Feedback sent! Thank you for helping us improve Cardhawk 🎉');
+      
+    } catch (error) {
+      console.error('Feedback submission error:', error);
+      alert('Failed to send feedback. Please try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+        </svg>
+        Send Feedback
+      `;
+    }
+  }
+  
+  // Card Flag Modal Methods
+  showCardFlagModal(cardId, cardName) {
+    if (!this.currentUser) {
+      alert('Please login to report card errors!');
+      this.showLoginScreen();
+      return;
+    }
+    
+    // Store card info for submission
+    this.currentFlagCardId = cardId;
+    this.currentFlagCardName = cardName;
+    
+    const modal = document.getElementById('cardFlagModal');
+    const cardNameDiv = document.getElementById('flagCardName');
+    
+    if (modal && cardNameDiv) {
+      cardNameDiv.textContent = cardName;
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+      
+      // Reset form
+      document.getElementById('flagType').value = '';
+      document.getElementById('flagComment').value = '';
+      document.getElementById('flagCharCount').textContent = '0';
+    }
+  }
+  
+  closeCardFlagModal() {
+    const modal = document.getElementById('cardFlagModal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+    }
+  }
+  
+  async submitCardFlag() {
+    const flagType = document.getElementById('flagType').value;
+    const comment = document.getElementById('flagComment').value;
+    const submitBtn = document.querySelector('#cardFlagForm button[type="submit"]');
+    
+    if (!flagType) {
+      alert('Please select an error type');
+      return;
+    }
+    
+    try {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+        Submitting...
+      `;
+      
+      await db.submitCardFlag(
+        this.currentUser.id,
+        this.currentUser.email,
+        this.currentFlagCardId,
+        this.currentFlagCardName,
+        flagType,
+        comment
+      );
+      
+      this.closeCardFlagModal();
+      this.showSuccessMessage('Report submitted! Thank you for helping us improve card data 🙏');
+      
+    } catch (error) {
+      console.error('Card flag submission error:', error);
+      alert('Failed to submit report. Please try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path>
+        </svg>
+        Submit Report
+      `;
+    }
   }
 }
 

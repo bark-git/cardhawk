@@ -13,13 +13,15 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Auth helpers
 export const auth = {
   // Sign up with email
-  async signUp(email, password, fullName) {
+  async signUp(email, password, fullName, additionalData = {}) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          full_name: fullName
+          full_name: fullName,
+          state: additionalData.state || '',
+          email_opt_in: additionalData.emailOptIn || false
         }
       }
     });
@@ -305,3 +307,51 @@ export async function migrateLocalStorageToSupabase(userId) {
     throw error;
   }
 }
+
+// Submit feedback
+export async function submitFeedback(userId, userEmail, page, message) {
+  try {
+    const { data, error } = await supabase
+      .from('feedback')
+      .insert({
+        user_id: userId,
+        user_email: userEmail,
+        page: page,
+        message: message
+      });
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Feedback submission error:', error);
+    throw error;
+  }
+}
+
+// Add to db object
+db.submitFeedback = submitFeedback;
+
+// Submit card flag
+export async function submitCardFlag(userId, userEmail, cardId, cardName, flagType, comment) {
+  try {
+    const { data, error } = await supabase
+      .from('card_flags')
+      .insert({
+        user_id: userId,
+        user_email: userEmail,
+        card_id: cardId,
+        card_name: cardName,
+        flag_type: flagType,
+        comment: comment || null
+      });
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Card flag submission error:', error);
+    throw error;
+  }
+}
+
+// Add to db object
+db.submitCardFlag = submitCardFlag;
