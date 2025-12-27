@@ -916,7 +916,7 @@ class CardhawkApp {
       other: 'Everything Else'
     };
     
-    document.getElementById('resultsTitle').textContent = `Best Card for ${categoryNames[category]}`;
+    this.safeSetText('resultsTitle', `Best Card for ${categoryNames[category]}`);
     this.renderRecommendations(recommendations, amount);
     this.openRecommendModal();
     this.showResultsView();
@@ -1163,7 +1163,7 @@ class CardhawkApp {
       hotels: 'Hotels',
       other: 'Everything Else'
     };
-    document.getElementById('resultsTitle').textContent = `Best Card for ${categoryNames[category]}`;
+    this.safeSetText('resultsTitle', `Best Card for ${categoryNames[category]}`);
     
     // Render results
     this.renderRecommendations(recommendations, amount);
@@ -1336,11 +1336,57 @@ class CardhawkApp {
     nextBtn.disabled = this.currentCardIndex === this.cards.length - 1;
   }
   
+  // Helper: Safely add event listener only if element exists
+  safeAddListener(elementId, event, handler) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.addEventListener(event, handler);
+      return true;
+    }
+    return false;
+  }
+  
+  // Helper: Safely set text content
+  safeSetText(elementId, text) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.textContent = text;
+      return true;
+    }
+    return false;
+  }
+  
+  // Helper: Safely set value
+  safeSetValue(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.value = value;
+      return true;
+    }
+    return false;
+  }
+  
+  // Helper: Safely get value
+  safeGetValue(elementId, defaultValue = '') {
+    const element = document.getElementById(elementId);
+    return element ? element.value : defaultValue;
+  }
+  
+  // Helper: Safely set style
+  safeSetStyle(elementId, property, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.style[property] = value;
+      return true;
+    }
+    return false;
+  }
+  
   // Event Listeners
   attachEventListeners() {
     // Navigation buttons
-    document.getElementById('prevBtn').addEventListener('click', () => this.prevCard());
-    document.getElementById('nextBtn').addEventListener('click', () => this.nextCard());
+    this.safeAddListener('prevBtn', 'click', () => this.prevCard());
+    this.safeAddListener('nextBtn', 'click', () => this.nextCard());
     
     // Menu drawer (legacy - kept for backward compatibility)
     const menuBtn = document.getElementById('menuBtn');
@@ -1355,13 +1401,18 @@ class CardhawkApp {
     }
     
     // Recommendation modal
-    document.getElementById('recommendBtn').addEventListener('click', () => this.openRecommendModal());
-    document.getElementById('closeRecommendBtn').addEventListener('click', () => this.closeRecommendModal());
-    document.getElementById('closeResultsBtn').addEventListener('click', () => this.closeRecommendModal());
-    document.getElementById('recommendOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) this.closeRecommendModal();
-    });
-    document.getElementById('backBtn').addEventListener('click', () => this.showCategoryView());
+    this.safeAddListener('recommendBtn', 'click', () => this.openRecommendModal());
+    this.safeAddListener('closeRecommendBtn', 'click', () => this.closeRecommendModal());
+    this.safeAddListener('closeResultsBtn', 'click', () => this.closeRecommendModal());
+    
+    const recommendOverlay = document.getElementById('recommendOverlay');
+    if (recommendOverlay) {
+      recommendOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) this.closeRecommendModal();
+      });
+    }
+    
+    this.safeAddListener('backBtn', 'click', () => this.showCategoryView());
     
     // Category buttons
     document.querySelectorAll('.category-btn').forEach(btn => {
@@ -1372,7 +1423,7 @@ class CardhawkApp {
     });
     
     // Theme toggle
-    document.getElementById('themeBtn').addEventListener('click', () => this.toggleTheme());
+    this.safeAddListener('themeBtn', 'click', () => this.toggleTheme());
     
     // Point value inputs (event delegation)
     document.addEventListener('change', (e) => {
@@ -1394,23 +1445,32 @@ class CardhawkApp {
     });
     
     // Quick categories
-    document.getElementById('customizeCategoriesBtn').addEventListener('click', () => this.openCustomizeCategories());
-    document.getElementById('closeCustomizeBtn').addEventListener('click', () => this.closeCustomizeCategories());
-    document.getElementById('customizeCategoriesOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) this.closeCustomizeCategories();
-    });
-    document.getElementById('saveCategoriesBtn').addEventListener('click', () => this.saveCustomCategories());
+    this.safeAddListener('customizeCategoriesBtn', 'click', () => this.openCustomizeCategories());
+    this.safeAddListener('closeCustomizeBtn', 'click', () => this.closeCustomizeCategories());
+    const customizeOverlay = document.getElementById('customizeCategoriesOverlay');
+    if (customizeOverlay) {
+      customizeOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) this.closeCustomizeCategories();
+      });
+    }
+    this.safeAddListener('saveCategoriesBtn', 'click', () => this.saveCustomCategories());
     
-    // Card comparison
-    document.getElementById('compareCardsMenuBtn').addEventListener('click', () => {
-      this.closeMenu();
-      setTimeout(() => this.openCompareModal(), 300);
-    });
-    document.getElementById('closeCompareBtn').addEventListener('click', () => this.closeCompareModal());
-    document.getElementById('compareOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) this.closeCompareModal();
-    });
-    document.getElementById('startCompareBtn').addEventListener('click', () => this.showComparisonResults());
+    // Card comparison (from old menu drawer - may not exist)
+    const compareCardsMenuBtn = document.getElementById('compareCardsMenuBtn');
+    if (compareCardsMenuBtn) {
+      compareCardsMenuBtn.addEventListener('click', () => {
+        this.closeMenu();
+        setTimeout(() => this.openCompareModal(), 300);
+      });
+    }
+    this.safeAddListener('closeCompareBtn', 'click', () => this.closeCompareModal());
+    const compareOverlay = document.getElementById('compareOverlay');
+    if (compareOverlay) {
+      compareOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) this.closeCompareModal();
+      });
+    }
+    this.safeAddListener('startCompareBtn', 'click', () => this.showComparisonResults());
     // Back button removed - now showing both panels side-by-side
     
     // Bottom navigation
@@ -2192,17 +2252,17 @@ class CardhawkApp {
   
   // Welcome & Login Screen Management
   showWelcomeScreen() {
-    document.getElementById('welcomeScreen').style.display = 'flex';
+    this.safeSetStyle('welcomeScreen', 'display', 'flex');
     document.body.style.overflow = 'hidden';
   }
   
   closeWelcomeScreen() {
-    document.getElementById('welcomeScreen').style.display = 'none';
+    this.safeSetStyle('welcomeScreen', 'display', 'none');
     document.body.style.overflow = '';
   }
   
   showLoginScreen() {
-    document.getElementById('loginScreen').style.display = 'flex';
+    this.safeSetStyle('loginScreen', 'display', 'flex');
     document.body.style.overflow = 'hidden';
     
     // Attach forgot password handler when screen is shown
@@ -2219,17 +2279,17 @@ class CardhawkApp {
   }
   
   closeLoginScreen() {
-    document.getElementById('loginScreen').style.display = 'none';
+    this.safeSetStyle('loginScreen', 'display', 'none');
     document.body.style.overflow = '';
   }
   
   showSignupScreen() {
-    document.getElementById('signupScreen').style.display = 'flex';
+    this.safeSetStyle('signupScreen', 'display', 'flex');
     document.body.style.overflow = 'hidden';
   }
   
   closeSignupScreen() {
-    document.getElementById('signupScreen').style.display = 'none';
+    this.safeSetStyle('signupScreen', 'display', 'none');
     document.body.style.overflow = '';
   }
   
