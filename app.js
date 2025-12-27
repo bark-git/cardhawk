@@ -720,6 +720,8 @@ class CardhawkApp {
     const item = document.createElement('div');
     item.className = `wallet-card-item ${isActive ? 'active' : ''}`;
     
+    const feeText = card.annualFee > 0 ? `$${card.annualFee}/yr` : 'No fee';
+    
     item.innerHTML = `
       <div class="wallet-card-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -729,6 +731,7 @@ class CardhawkApp {
       </div>
       <div class="wallet-card-name">${card.displayName}</div>
       <div class="wallet-card-issuer">${card.issuer}</div>
+      <div class="wallet-card-fee">${feeText}</div>
     `;
     
     item.addEventListener('click', async () => {
@@ -1023,7 +1026,9 @@ class CardhawkApp {
     
     // Enable/disable compare button
     const btn = document.getElementById('startCompareBtn');
-    btn.disabled = this.selectedCompareCards.length < 2;
+    if (btn) {
+      btn.disabled = this.selectedCompareCards.length < 2;
+    }
   }
   
   showCardSelection() {
@@ -1044,9 +1049,16 @@ class CardhawkApp {
   
   renderComparison() {
     const container = document.getElementById('comparisonTable');
+    if (!container) return;
+    
     const cards = this.selectedCompareCards.map(id => 
       cardDatabase.find(c => c.id === id)
-    );
+    ).filter(card => card); // Remove any undefined cards
+    
+    if (cards.length < 2) {
+      container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-secondary);">Please select at least 2 cards to compare.</p>';
+      return;
+    }
     
     // Build comparison table
     let html = '<div class="comparison-table-container"><table class="comparison-table">';
@@ -1484,12 +1496,17 @@ class CardhawkApp {
     // Profile page
     const profileEditBtnMain = document.getElementById('profileEditBtn');
     if (profileEditBtnMain) {
-      profileEditBtnMain.addEventListener('click', () => this.openEditProfileModal());
+      profileEditBtnMain.addEventListener('click', () => this.showProfileEditModal());
     }
     
     const updateWalletBtn = document.getElementById('updateWalletBtn');
     if (updateWalletBtn) {
       updateWalletBtn.addEventListener('click', () => this.navigateToPage('wallet'));
+    }
+    
+    const walletBackBtn = document.getElementById('walletBackBtn');
+    if (walletBackBtn) {
+      walletBackBtn.addEventListener('click', () => this.navigateToPage('profile'));
     }
     
     const profileFeedbackBtn = document.getElementById('profileFeedbackBtn');
