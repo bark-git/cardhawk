@@ -806,28 +806,39 @@
                     </button>
                 </div>
 
-                <div class="modal-content">
-                    <!-- Card Selection -->
-                    <div id="cardSelection">
-                        <p class="modal-subtitle">Select 2-3 cards to compare:</p>
-                        <div id="compareCardList" class="compare-card-list">
-                            <!-- Cards will be populated here -->
+                <div class="modal-content compare-modal-content">
+                    <!-- Left: Card Selection -->
+                    <div class="compare-selection-panel">
+                        <div id="cardSelection">
+                            <p class="modal-subtitle">Select 2-3 cards:</p>
+                            <div id="compareCardList" class="compare-card-list">
+                                <!-- Cards will be populated here -->
+                            </div>
+                            <button class="btn-compare" id="startCompareBtn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4"></path>
+                                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                                </svg>
+                                Compare Selected
+                            </button>
                         </div>
-                        <button class="btn-compare" id="startCompareBtn" disabled>
-                            Compare Selected Cards
-                        </button>
                     </div>
 
-                    <!-- Comparison Results -->
-                    <div id="comparisonResults" class="hidden">
-                        <button class="back-btn" id="backToSelectionBtn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                            Change Cards
-                        </button>
-                        <div id="comparisonTable">
-                            <!-- Comparison table will be populated here -->
+                    <!-- Right: Comparison Results -->
+                    <div class="compare-results-panel">
+                        <div id="comparisonResults">
+                            <div class="comparison-placeholder">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                <p>Select cards to see comparison</p>
+                            </div>
+                            <div id="comparisonTable" class="hidden">
+                                <!-- Comparison table will be populated here -->
+                            </div>
                         </div>
                     </div>
                 </div>

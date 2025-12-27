@@ -62,9 +62,11 @@ export const auth = {
   
   // Get current user
   async getCurrentUser() {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    // Use getSession() instead of getUser() for better mobile reliability
+    // getSession() reads from localStorage, getUser() makes network call
+    const { data: { session }, error } = await supabase.auth.getSession();
     if (error) throw error;
-    return user;
+    return session?.user || null;
   },
   
   // Listen to auth changes

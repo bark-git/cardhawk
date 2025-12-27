@@ -435,10 +435,26 @@ class CardhawkApp {
   
   // Toggle card in/out of wallet
   async toggleCard(cardId) {
+    // Check currentUser, if null try to get it from session
     if (!this.currentUser) {
-      alert('Please login to manage your cards!');
-      this.showLoginScreen();
-      return;
+      console.warn('⚠️ currentUser is null, attempting to restore from session...');
+      try {
+        const user = await auth.getCurrentUser();
+        if (user) {
+          console.log('✅ Restored user from session:', user.email);
+          this.currentUser = user;
+        } else {
+          console.error('❌ No session found');
+          alert('Please login to manage your cards!');
+          this.showLoginScreen();
+          return;
+        }
+      } catch (error) {
+        console.error('❌ Error restoring session:', error);
+        alert('Please login to manage your cards!');
+        this.showLoginScreen();
+        return;
+      }
     }
     
     const index = this.userCards.indexOf(cardId);
@@ -831,8 +847,13 @@ class CardhawkApp {
   }
   
   showComparisonResults() {
-    document.getElementById('cardSelection').classList.add('hidden');
-    document.getElementById('comparisonResults').classList.remove('hidden');
+    // Don't hide selection - show results inline in the results panel
+    const placeholder = document.querySelector('.comparison-placeholder');
+    const resultsTable = document.getElementById('comparisonTable');
+    
+    if (placeholder) placeholder.classList.add('hidden');
+    if (resultsTable) resultsTable.classList.remove('hidden');
+    
     this.renderComparison();
   }
   
@@ -849,7 +870,7 @@ class CardhawkApp {
     html += '<tr><th>Feature</th>';
     cards.forEach(card => {
       html += `<th>
-        <div class="comparison-card-header">${card.name}</div>
+        <div class="comparison-card-header">${card.displayName || card.name}</div>
         <div class="comparison-card-subheader">$${card.annualFee}/year</div>
       </th>`;
     });
@@ -1198,7 +1219,7 @@ class CardhawkApp {
       if (e.target === e.currentTarget) this.closeCompareModal();
     });
     document.getElementById('startCompareBtn').addEventListener('click', () => this.showComparisonResults());
-    document.getElementById('backToSelectionBtn').addEventListener('click', () => this.showCardSelection());
+    // Back button removed - now showing both panels side-by-side
     
     // Bottom navigation
     document.querySelectorAll('.nav-item').forEach(item => {
