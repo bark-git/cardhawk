@@ -44,50 +44,52 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <!-- Menu Drawer -->
-    <div class="menu-drawer" id="menuDrawer">
-        <div class="drawer-header">
-            <h2>My Cards</h2>
-            <button class="close-drawer" id="closeDrawerBtn" aria-label="Close menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
+    <!-- Menu Popup -->
+    <div class="menu-popup" id="menuPopup" style="display: none;">
+        <button type="button" class="menu-popup-item" id="menuProfileBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Profile</span>
+        </button>
 
-        <div class="drawer-content">
-            <!-- Compare Cards Button -->
-            <button class="menu-action-btn" id="compareCardsMenuBtn">
-                <svg class="action-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="14" width="7" height="7"></rect>
-                    <rect x="3" y="14" width="7" height="7"></rect>
-                </svg>
-                <span class="action-text">Compare Cards</span>
-                <svg class="action-arrow-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </button>
+        <button type="button" class="menu-popup-item" id="menuSettingsBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m5.2-15.4l-4.2 4.2m-6 6l-4.2 4.2m15.4 0l-4.2-4.2m-6-6L3.8 3.8"></path>
+            </svg>
+            <span>Settings</span>
+        </button>
 
-            <!-- My Active Cards Section -->
-            <div class="drawer-section">
-                <h3>Active Cards</h3>
-                <div id="activeCardsList" class="cards-list">
-                    <!-- Active cards will be populated here -->
-                </div>
-            </div>
+        <button type="button" class="menu-popup-item" id="menuFeedbackBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Send Feedback</span>
+        </button>
 
-            <!-- Available Cards Section -->
-            <div class="drawer-section">
-                <h3>Available Cards</h3>
-                <p class="section-hint">Tap to add to your wallet</p>
-                <div id="availableCardsList" class="cards-list">
-                    <!-- Available cards will be populated here -->
-                </div>
-            </div>
-        </div>
+        <div class="menu-popup-divider"></div>
+
+        <button type="button" class="menu-popup-item" id="menuDarkModeBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+            </svg>
+            <span>Dark Mode</span>
+            <label class="toggle-switch-small">
+                <input type="checkbox" id="menuDarkModeToggle">
+                <span class="toggle-slider-small"></span>
+            </label>
+        </button>
+
+        <button type="button" class="menu-popup-item danger" id="menuSignOutBtn" style="display: none;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Sign Out</span>
+        </button>
     </div>
 
     <!-- App Container -->
@@ -161,6 +163,109 @@
         </div>
         <!-- End Home Page -->
 
+        <!-- Page: Profile -->
+        <div class="page" id="profilePage">
+            <div class="profile-container">
+                <div class="profile-header-section">
+                    <div class="profile-avatar">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name" id="profileUserName">Guest User</h2>
+                        <p class="profile-email" id="profileUserEmail">Not logged in</p>
+                    </div>
+                    <button type="button" class="profile-edit-btn" id="profileEditBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Wallet Stats -->
+                <div class="profile-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="walletCardCount">0</div>
+                            <div class="stat-label">Cards in Wallet</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="walletAnnualCost">$0</div>
+                            <div class="stat-label">Annual Fees</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Wallet Button -->
+                <button type="button" class="btn-update-wallet" id="updateWalletBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                        <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                        <path d="M16 21h5v-5"></path>
+                    </svg>
+                    Update Wallet
+                </button>
+
+                <!-- Quick Actions -->
+                <div class="profile-actions-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    
+                    <button type="button" class="profile-action-btn" id="profileFeedbackBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Send Feedback</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- End Profile Page -->
+
+        <!-- Page: Wallet Management -->
+        <div class="page" id="walletPage">
+            <div class="wallet-container">
+                <h2 class="page-title">My Wallet</h2>
+                <p class="page-subtitle">Manage your credit cards</p>
+
+                <!-- Active Cards Section -->
+                <div class="wallet-section">
+                    <h3 class="wallet-section-title">Active Cards <span class="card-count-badge" id="activeCardsBadge">0</span></h3>
+                    <div id="walletActiveCardsList" class="wallet-cards-grid">
+                        <!-- Active cards will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Available Cards Section -->
+                <div class="wallet-section">
+                    <h3 class="wallet-section-title">Available Cards</h3>
+                    <p class="wallet-section-hint">Tap to add to your wallet</p>
+                    <div id="walletAvailableCardsList" class="wallet-cards-grid">
+                        <!-- Available cards will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Wallet Page -->
+
         <!-- Page: Settings -->
         <div class="page" id="settingsPage">
             <div class="settings-container">
@@ -184,17 +289,6 @@
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                             Edit Profile
-                        </button>
-                    </div>
-                    
-                    <div class="settings-item">
-                        <button class="settings-action-btn danger" id="logoutBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            Sign Out
                         </button>
                     </div>
                 </div>
@@ -314,6 +408,18 @@
                             <div class="action-label">Reset All Data</div>
                             <div class="action-description">Clear preferences and start fresh</div>
                         </div>
+                    </button>
+                </div>
+                
+                <!-- Sign Out (shown when logged in) -->
+                <div class="settings-section" id="signOutSection" style="display: none;">
+                    <button class="settings-action-btn danger full-width" id="logoutBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Sign Out
                     </button>
                 </div>
             </div>
@@ -560,6 +666,14 @@
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             </svg>
             <span class="nav-label">Home</span>
+        </button>
+        
+        <button class="nav-item" data-page="profile" aria-label="Profile">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="nav-label">Profile</span>
         </button>
         
         <button class="nav-item" data-page="merchantSearch" aria-label="Search">
@@ -814,7 +928,7 @@
                             <div id="compareCardList" class="compare-card-list">
                                 <!-- Cards will be populated here -->
                             </div>
-                            <button class="btn-compare" id="startCompareBtn" disabled>
+                            <button type="button" class="btn-compare" id="startCompareBtn" disabled>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M9 11l3 3L22 4"></path>
                                     <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
@@ -1008,7 +1122,7 @@
     <!-- Signup Screen -->
     <div class="fullscreen-overlay" id="signupScreen" style="display: none;">
         <div class="login-container">
-            <button class="close-auth" id="closeSignupBtn">
+            <button type="button" class="close-auth" id="closeSignupBtn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1163,7 +1277,7 @@
     <!-- Login Screen -->
     <div class="fullscreen-overlay" id="loginScreen" style="display: none;">
         <div class="login-container">
-            <button class="close-auth" id="closeLoginBtn">
+            <button type="button" class="close-auth" id="closeLoginBtn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1278,7 +1392,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Edit Profile</h3>
-                <button class="modal-close" id="closeProfileModal">
+                <button type="button" class="modal-close" id="closeProfileModal">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>

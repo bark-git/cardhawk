@@ -22,6 +22,7 @@ class CardhawkApp {
     this.rotatingSpending = {};
     this.currentUser = null;
     this.authInitialized = false;
+    this.cardsToShow = 5; // Show 5 cards initially
     
     // Initialize app immediately (don't wait for auth)
     this.init();
@@ -158,14 +159,62 @@ class CardhawkApp {
   
   updateUserProfile() {
     const profileSection = document.getElementById('userProfileSection');
+    const signOutSection = document.getElementById('signOutSection');
     const emailLabel = document.getElementById('userEmailLabel');
+    const menuSignOutBtn = document.getElementById('menuSignOutBtn');
+    
+    // Profile page elements
+    const profileUserName = document.getElementById('profileUserName');
+    const profileUserEmail = document.getElementById('profileUserEmail');
+    const profileEditBtn = document.getElementById('profileEditBtn');
     
     if (this.currentUser) {
-      profileSection.style.display = 'block';
-      emailLabel.textContent = this.currentUser.email;
+      // Settings page
+      if (profileSection) profileSection.style.display = 'block';
+      if (signOutSection) signOutSection.style.display = 'block';
+      if (emailLabel) emailLabel.textContent = this.currentUser.email;
+      if (menuSignOutBtn) menuSignOutBtn.style.display = 'flex';
+      
+      // Profile page
+      const displayName = this.currentUser.user_metadata?.full_name || 
+                         this.currentUser.email?.split('@')[0] || 
+                         'User';
+      if (profileUserName) profileUserName.textContent = displayName;
+      if (profileUserEmail) profileUserEmail.textContent = this.currentUser.email;
+      if (profileEditBtn) profileEditBtn.style.display = 'flex';
+      
+      // Update wallet stats
+      this.updateWalletStats();
     } else {
-      profileSection.style.display = 'none';
+      // Settings page
+      if (profileSection) profileSection.style.display = 'none';
+      if (signOutSection) signOutSection.style.display = 'none';
+      if (menuSignOutBtn) menuSignOutBtn.style.display = 'none';
+      
+      // Profile page
+      if (profileUserName) profileUserName.textContent = 'Guest User';
+      if (profileUserEmail) profileUserEmail.textContent = 'Please login to view your profile';
+      if (profileEditBtn) profileEditBtn.style.display = 'none';
+      
+      // Reset wallet stats
+      this.updateWalletStats();
     }
+  }
+  
+  updateWalletStats() {
+    const cardCountEl = document.getElementById('walletCardCount');
+    const annualCostEl = document.getElementById('walletAnnualCost');
+    const activeCardsBadge = document.getElementById('activeCardsBadge');
+    
+    const cardCount = this.userCards.length;
+    const annualCost = this.userCards.reduce((total, cardId) => {
+      const card = cardDatabase.find(c => c.id === cardId);
+      return total + (card?.annualFee || 0);
+    }, 0);
+    
+    if (cardCountEl) cardCountEl.textContent = cardCount;
+    if (annualCostEl) annualCostEl.textContent = `$${annualCost.toLocaleString()}`;
+    if (activeCardsBadge) activeCardsBadge.textContent = cardCount;
   }
   
   async loadUserDataFromSupabase() {
@@ -208,10 +257,41 @@ class CardhawkApp {
     const track = document.getElementById('carouselTrack');
     track.innerHTML = '';
     
-    this.cards.forEach((card, index) => {
+    // Show only first N cards
+    const cardsToDisplay = this.cards.slice(0, this.cardsToShow);
+    
+    cardsToDisplay.forEach((card, index) => {
       const cardElement = this.createCardElement(card, index);
       track.appendChild(cardElement);
     });
+    
+    // Add "Load More" button if there are more cards
+    if (this.cardsToShow < this.cards.length) {
+      const loadMoreDiv = document.createElement('div');
+      loadMoreDiv.className = 'load-more-container';
+      loadMoreDiv.innerHTML = `
+        <button class="btn-load-more" id="loadMoreCards">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+          Load More Cards (${this.cards.length - this.cardsToShow} remaining)
+        </button>
+      `;
+      track.appendChild(loadMoreDiv);
+      
+      // Attach event listener
+      setTimeout(() => {
+        const btn = document.getElementById('loadMoreCards');
+        if (btn) {
+          btn.addEventListener('click', () => this.loadMoreCards());
+        }
+      }, 0);
+    }
+  }
+  
+  loadMoreCards() {
+    this.cardsToShow += 5; // Load 5 more cards
+    this.renderCards();
   }
   
   // Create individual card HTML
@@ -493,6 +573,7 @@ class CardhawkApp {
     this.renderCards();
     this.renderIndicators();
     this.renderMenuDrawer();
+    this.updateWalletStats(); // Update profile stats
     this.updateCarousel();
     this.updateNavButtons();
   }
@@ -586,6 +667,95 @@ class CardhawkApp {
     document.getElementById('menuDrawer').classList.remove('active');
     document.getElementById('menuOverlay').classList.remove('active');
     document.body.style.overflow = ''; // Restore scrolling
+  }
+  
+  // Render Wallet Page
+  renderWalletPage() {
+    const activeList = document.getElementById('walletActiveCardsList');
+    const availableList = document.getElementById('walletAvailableCardsList');
+    
+    if (!activeList || !availableList) return;
+    
+    // Clear existing
+    activeList.innerHTML = '';
+    availableList.innerHTML = '';
+    
+    // Separate active and available cards
+    const activeCards = cardDatabase.filter(card => this.userCards.includes(card.id));
+    const availableCards = cardDatabase.filter(card => !this.userCards.includes(card.id));
+    
+    // Render active cards
+    if (activeCards.length === 0) {
+      activeList.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: var(--space-xl);">No cards in wallet. Add cards below!</p>';
+    } else {
+      activeCards.forEach(card => {
+        const item = this.createWalletCardItem(card, true);
+        activeList.appendChild(item);
+      });
+    }
+    
+    // Render available cards
+    availableCards.forEach(card => {
+      const item = this.createWalletCardItem(card, false);
+      availableList.appendChild(item);
+    });
+  }
+  
+  createWalletCardItem(card, isActive) {
+    const item = document.createElement('div');
+    item.className = `wallet-card-item ${isActive ? 'active' : ''}`;
+    
+    item.innerHTML = `
+      <div class="wallet-card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+      </div>
+      <div class="wallet-card-name">${card.displayName}</div>
+      <div class="wallet-card-issuer">${card.issuer}</div>
+    `;
+    
+    item.addEventListener('click', async () => {
+      await this.toggleCard(card.id);
+      this.renderWalletPage();
+      this.updateWalletStats();
+    });
+    
+    return item;
+  }
+  
+  // Menu Popup Functions
+  toggleMenuPopup() {
+    const popup = document.getElementById('menuPopup');
+    if (!popup) return;
+    
+    if (popup.style.display === 'none' || !popup.style.display) {
+      popup.style.display = 'block';
+      // Add click outside to close
+      setTimeout(() => {
+        document.addEventListener('click', this.closeMenuPopupOnClickOutside);
+      }, 0);
+    } else {
+      this.closeMenuPopup();
+    }
+  }
+  
+  closeMenuPopup() {
+    const popup = document.getElementById('menuPopup');
+    if (popup) {
+      popup.style.display = 'none';
+    }
+    document.removeEventListener('click', this.closeMenuPopupOnClickOutside);
+  }
+  
+  closeMenuPopupOnClickOutside = (e) => {
+    const popup = document.getElementById('menuPopup');
+    const menuBtn = document.getElementById('menuBtn');
+    
+    if (popup && !popup.contains(e.target) && e.target !== menuBtn) {
+      this.closeMenuPopup();
+    }
   }
   
   // Update indicator active state
@@ -1229,6 +1399,89 @@ class CardhawkApp {
       });
     });
     
+    // Profile page
+    const profileEditBtnMain = document.getElementById('profileEditBtn');
+    if (profileEditBtnMain) {
+      profileEditBtnMain.addEventListener('click', () => this.openEditProfileModal());
+    }
+    
+    const updateWalletBtn = document.getElementById('updateWalletBtn');
+    if (updateWalletBtn) {
+      updateWalletBtn.addEventListener('click', () => this.navigateToPage('wallet'));
+    }
+    
+    const profileFeedbackBtn = document.getElementById('profileFeedbackBtn');
+    if (profileFeedbackBtn) {
+      profileFeedbackBtn.addEventListener('click', () => this.showFeedbackModal());
+    }
+    
+    // Menu Popup
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleMenuPopup();
+      });
+    }
+    
+    const menuProfileBtn = document.getElementById('menuProfileBtn');
+    if (menuProfileBtn) {
+      menuProfileBtn.addEventListener('click', () => {
+        this.closeMenuPopup();
+        this.navigateToPage('profile');
+      });
+    }
+    
+    const menuSettingsBtn = document.getElementById('menuSettingsBtn');
+    if (menuSettingsBtn) {
+      menuSettingsBtn.addEventListener('click', () => {
+        this.closeMenuPopup();
+        this.navigateToPage('settings');
+      });
+    }
+    
+    const menuFeedbackBtn = document.getElementById('menuFeedbackBtn');
+    if (menuFeedbackBtn) {
+      menuFeedbackBtn.addEventListener('click', () => {
+        this.closeMenuPopup();
+        this.showFeedbackModal();
+      });
+    }
+    
+    const menuDarkModeToggle = document.getElementById('menuDarkModeToggle');
+    if (menuDarkModeToggle) {
+      menuDarkModeToggle.addEventListener('change', () => this.toggleDarkMode());
+      // Sync with main dark mode state
+      menuDarkModeToggle.checked = this.darkMode;
+    }
+    
+    const menuSignOutBtn = document.getElementById('menuSignOutBtn');
+    if (menuSignOutBtn) {
+      menuSignOutBtn.addEventListener('click', async () => {
+        this.closeMenuPopup();
+        if (!confirm('Are you sure you want to sign out?')) return;
+        
+        try {
+          console.log('🔓 Signing out...');
+          await auth.signOut();
+          this.currentUser = null;
+          this.userCards = [];
+          this.customPointValues = {};
+          this.rotatingSpending = {};
+          this.quickCategories = [];
+          this.updateUserProfile();
+          this.renderCards();
+          this.renderQuickCategories();
+          this.navigateToPage('home');
+          this.showWelcomeScreen();
+          console.log('✅ Signed out successfully');
+        } catch (error) {
+          console.error('❌ Logout error:', error);
+          alert('Logout failed. Please try again.');
+        }
+      });
+    }
+    
     // Settings page
     document.querySelectorAll('.theme-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -1651,11 +1904,33 @@ class CardhawkApp {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to sign out?')) {
+          return;
+        }
+        
         try {
+          console.log('🔓 Signing out...');
           await auth.signOut();
-          alert('Logged out successfully!');
+          
+          // Clean up state immediately
+          this.currentUser = null;
+          this.userCards = [];
+          this.customPointValues = {};
+          this.rotatingSpending = {};
+          this.quickCategories = [];
+          
+          // Clear UI
+          this.updateUserProfile();
+          this.renderCards();
+          this.renderQuickCategories();
+          
+          // Navigate to home and show welcome
+          this.navigateToPage('home');
+          this.showWelcomeScreen();
+          
+          console.log('✅ Signed out successfully');
         } catch (error) {
-          console.error('Logout error:', error);
+          console.error('❌ Logout error:', error);
           alert('Logout failed. Please try again.');
         }
       });
@@ -1814,6 +2089,12 @@ class CardhawkApp {
     this.darkMode = !this.darkMode;
     localStorage.setItem('cardhawk-dark-mode', this.darkMode);
     this.applyDarkMode();
+    
+    // Sync both toggles
+    const mainToggle = document.getElementById('darkModeToggle');
+    const menuToggle = document.getElementById('menuDarkModeToggle');
+    if (mainToggle) mainToggle.checked = this.darkMode;
+    if (menuToggle) menuToggle.checked = this.darkMode;
   }
   
   // Page Navigation
@@ -1848,6 +2129,10 @@ class CardhawkApp {
     // Handle page-specific actions
     if (pageName === 'rotating') {
       this.renderRotatingCategories();
+    } else if (pageName === 'profile') {
+      this.updateUserProfile();
+    } else if (pageName === 'wallet') {
+      this.renderWalletPage();
     }
   }
   
