@@ -583,6 +583,11 @@ class CardhawkApp {
     const activeCardsList = document.getElementById('activeCardsList');
     const availableCardsList = document.getElementById('availableCardsList');
     
+    // Safety check - if drawer doesn't exist, skip rendering
+    if (!activeCardsList || !availableCardsList) {
+      return;
+    }
+    
     // Clear lists
     activeCardsList.innerHTML = '';
     availableCardsList.innerHTML = '';
