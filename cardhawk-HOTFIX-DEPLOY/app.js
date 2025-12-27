@@ -653,20 +653,30 @@ class CardhawkApp {
     return item;
   }
   
-  // Open menu drawer
+  // Open menu drawer (legacy - now uses popup)
   openMenu() {
-    this.menuOpen = true;
-    document.getElementById('menuDrawer').classList.add('active');
-    document.getElementById('menuOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    const drawer = document.getElementById('menuDrawer');
+    const overlay = document.getElementById('menuOverlay');
+    
+    if (drawer && overlay) {
+      this.menuOpen = true;
+      drawer.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
   }
   
-  // Close menu drawer
+  // Close menu drawer (legacy - now uses popup)
   closeMenu() {
-    this.menuOpen = false;
-    document.getElementById('menuDrawer').classList.remove('active');
-    document.getElementById('menuOverlay').classList.remove('active');
-    document.body.style.overflow = ''; // Restore scrolling
+    const drawer = document.getElementById('menuDrawer');
+    const overlay = document.getElementById('menuOverlay');
+    
+    if (drawer && overlay) {
+      this.menuOpen = false;
+      drawer.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
   }
   
   // Render Wallet Page
@@ -1327,10 +1337,17 @@ class CardhawkApp {
     document.getElementById('prevBtn').addEventListener('click', () => this.prevCard());
     document.getElementById('nextBtn').addEventListener('click', () => this.nextCard());
     
-    // Menu drawer
-    document.getElementById('menuBtn').addEventListener('click', () => this.openMenu());
-    document.getElementById('closeDrawerBtn').addEventListener('click', () => this.closeMenu());
-    document.getElementById('menuOverlay').addEventListener('click', () => this.closeMenu());
+    // Menu drawer (legacy - kept for backward compatibility)
+    const menuBtn = document.getElementById('menuBtn');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    
+    if (menuBtn && closeDrawerBtn && menuOverlay) {
+      // Only attach if old drawer still exists
+      menuBtn.addEventListener('click', () => this.openMenu());
+      closeDrawerBtn.addEventListener('click', () => this.closeMenu());
+      menuOverlay.addEventListener('click', () => this.closeMenu());
+    }
     
     // Recommendation modal
     document.getElementById('recommendBtn').addEventListener('click', () => this.openRecommendModal());

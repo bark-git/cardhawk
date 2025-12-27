@@ -1,0 +1,54 @@
+====================================================================
+NAVIGATION HOTFIX - QUICK START
+====================================================================
+
+🔴 CRITICAL: Navigation is broken, this fixes it!
+
+====================================================================
+⚡ FASTEST FIX (2 STEPS):
+====================================================================
+
+1. EXTRACT ZIP:
+   Extract cardhawk-HOTFIX-v5.3.1.zip to:
+   C:\Users\andre\Desktop\Cardhawk\Ready for Deployment
+
+2. RUN SCRIPT:
+   Navigate to: C:\Users\andre\Desktop\Cardhawk\Ready for Deployment
+   Right-click: DEPLOY-HOTFIX.ps1
+   Click: "Run with PowerShell"
+   
+   Done! Script does everything automatically.
+
+====================================================================
+📋 WHAT'S FIXED:
+====================================================================
+
+✅ Bottom navigation works
+✅ Can navigate between pages
+✅ Hamburger menu works
+✅ All menu items work
+✅ No more JavaScript errors
+
+====================================================================
+🧪 TEST AFTER (1-2 MINUTES):
+====================================================================
+
+Go to: https://cardhawk.vercel.app
+
+1. Click Profile tab → Works!
+2. Click Home tab → Works!
+3. Click all tabs → All work!
+4. Click ☰ menu → Opens!
+5. Click menu items → Navigate!
+
+====================================================================
+⏱️ TOTAL TIME: < 2 MINUTES
+====================================================================
+
+Extract → Run Script → Wait → Test → Fixed! ✅
+
+====================================================================
+
+Full instructions in README-HOTFIX.md
+
+DEPLOY NOW! 🚀
