@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#CD9935">
+    <meta name="description" content="View your Amex credit card rewards and perks in one beautiful app">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cardhawk">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <title>Cardhawk - Your Card Rewards</title>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Menu Button -->
+    <div class="menu-button">
+        <button id="menuBtn" aria-label="Open menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="themeBtn" aria-label="Toggle theme">
+            <span class="theme-icon">🌙</span>
+        </button>
+    </div>
+
+    <!-- Menu Drawer Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Menu Drawer -->
+    <div class="menu-drawer" id="menuDrawer">
+        <div class="drawer-header">
+            <h2>My Cards</h2>
+            <button class="close-drawer" id="closeDrawerBtn" aria-label="Close menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="drawer-content">
+            <!-- Compare Cards Button -->
+            <button class="menu-action-btn" id="compareCardsMenuBtn">
+                <svg class="action-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span class="action-text">Compare Cards</span>
+                <svg class="action-arrow-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+
+            <!-- My Active Cards Section -->
+            <div class="drawer-section">
+                <h3>Active Cards</h3>
+                <div id="activeCardsList" class="cards-list">
+                    <!-- Active cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Available Cards Section -->
+            <div class="drawer-section">
+                <h3>Available Cards</h3>
+                <p class="section-hint">Tap to add to your wallet</p>
+                <div id="availableCardsList" class="cards-list">
+                    <!-- Available cards will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="app-title">Cardhawk</h1>
+            <p class="app-subtitle">Your rewards scout 
+                <svg class="subtitle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </p>
+        </header>
+
+        <!-- Page: Home -->
+        <div class="page active" id="homePage">
+            <!-- Quick Categories -->
+            <div class="quick-categories" id="quickCategories">
+            <div class="quick-categories-header">
+                <h3>Quick Recommendations</h3>
+                <button class="customize-btn" id="customizeCategoriesBtn" aria-label="Customize categories">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m5.2-15.4l-4.2 4.2m-6 6l-4.2 4.2m15.4 0l-4.2-4.2m-6-6L3.8 3.8"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="quick-category-grid" id="quickCategoryGrid">
+                <!-- Quick categories will be populated here -->
+            </div>
+        </div>
+
+        <!-- Recommendation Button -->
+        <div class="recommendation-cta">
+            <button class="btn-recommend" id="recommendBtn">
+                <svg class="btn-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+                <span class="btn-text">Which card should I use?</span>
+            </button>
+        </div>
+
+        <!-- Card Carousel -->
+        <div class="card-carousel">
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Cards will be injected here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Card Indicators -->
+        <div class="card-indicators" id="indicators">
+            <!-- Indicators will be injected here -->
+        </div>
+
+        <!-- Card Navigation -->
+        <div class="card-nav">
+            <button class="nav-btn nav-prev" id="prevBtn" aria-label="Previous card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="nav-btn nav-next" id="nextBtn" aria-label="Next card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+        </div>
+        <!-- End Home Page -->
+
+        <!-- Page: Settings -->
+        <div class="page" id="settingsPage">
+            <div class="settings-container">
+                <h2 class="settings-title">Settings</h2>
+                
+                <!-- User Profile (shown when logged in) -->
+                <div class="settings-section" id="userProfileSection" style="display: none;">
+                    <h3 class="settings-section-title">Account</h3>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-label" id="userEmailLabel">Not logged in</div>
+                            <div class="settings-item-description">Your account email</div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <button class="settings-action-btn secondary" id="editProfileBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit Profile
+                        </button>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <button class="settings-action-btn danger" id="logoutBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Theme Settings -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Appearance</h3>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-label">Theme Style</div>
+                            <div class="settings-item-description">Choose your visual style</div>
+                        </div>
+                        <div class="theme-toggle-group">
+                            <button class="theme-option active" data-theme="luxury">
+                                <svg class="theme-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                                </svg>
+                                <span class="theme-name">Luxury</span>
+                            </button>
+                            <button class="theme-option" data-theme="bold">
+                                <svg class="theme-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                                <span class="theme-name">Bold</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item" id="darkModeSection">
+                        <div class="settings-item-info">
+                            <div class="settings-item-label">Dark Mode</div>
+                            <div class="settings-item-description">Works with both themes</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Testing Section (Hidden) -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Testing (Dev Only)</h3>
+                    
+                    <button class="settings-action-btn" id="showWelcomeBtn">
+                        <svg class="action-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                        <div>
+                            <div class="action-label">Test Welcome Screen</div>
+                            <div class="action-description">View onboarding experience</div>
+                        </div>
+                    </button>
+                    
+                    <button class="settings-action-btn" id="showLoginBtn">
+                        <svg class="action-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path>
+                        </svg>
+                        <div>
+                            <div class="action-label">Test Login Screen</div>
+                            <div class="action-description">View authentication UI</div>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- About Section -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">About</h3>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-label">Version</div>
+                            <div class="settings-item-description">Cardhawk v5.0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-info">
+                            <div class="settings-item-label">Cards in Database</div>
+                            <div class="settings-item-description">13 cards from 5 issuers</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title">Actions</h3>
+                    
+                    <button class="settings-action-btn" id="resetDataBtn">
+                        <svg class="action-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        <div>
+                            <div class="action-label">Reset All Data</div>
+                            <div class="action-description">Clear preferences and start fresh</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- End Settings Page -->
+        
+        <!-- Page: Merchant Search -->
+        <div class="page" id="merchantSearchPage">
+            <div class="search-container">
+                <h2 class="search-title">Merchant Search</h2>
+                <p class="search-subtitle">Find out how merchants code and which card to use</p>
+                
+                <div class="search-box">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="merchantSearchInput" 
+                        placeholder="Search for a merchant (e.g., Starbucks, Costco...)" 
+                        autocomplete="off"
+                    />
+                </div>
+                
+                <div id="merchantSearchResults" class="merchant-results">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+        </div>
+        <!-- End Merchant Search Page -->
+        
+        <!-- Page: Spending Calculator -->
+        <div class="page" id="calculatorPage">
+            <div class="calculator-container">
+                <h2 class="calculator-title">Spending Calculator</h2>
+                <p class="calculator-subtitle">See which cards earn you the most based on YOUR spending</p>
+                
+                <div class="spending-inputs">
+                    <h3 class="section-title">Your Monthly Spending</h3>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2v0a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zM21 15v7"></path>
+                            </svg>
+                            <span>Dining</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendDining" placeholder="0" min="0" step="50" value="500">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"></path>
+                            </svg>
+                            <span>Grocery</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendGrocery" placeholder="0" min="0" step="50" value="400">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3s-3-1-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+                            </svg>
+                            <span>Flights</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendFlights" placeholder="0" min="0" step="100" value="200">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9a2 2 0 012-2h14a2 2 0 012 2M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M3 9V6a2 2 0 012-2h2M21 9V6a2 2 0 00-2-2h-2"></path>
+                                <path d="M9 21v-8a2 2 0 012-2h2a2 2 0 012 2v8"></path>
+                            </svg>
+                            <span>Hotels</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendHotels" placeholder="0" min="0" step="100" value="100">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 2h12v13c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V2z"></path>
+                                <path d="M3 6h12M15 11l5-5v11a2 2 0 002 2h0a2 2 0 002-2v-4l-3-3"></path>
+                                <circle cx="18" cy="7" r="1"></circle>
+                                <path d="M5 22v-7M11 22v-7"></path>
+                            </svg>
+                            <span>Gas</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendGas" placeholder="0" min="0" step="50" value="150">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="spending-input-group">
+                        <label class="spending-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <span>Other</span>
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendOther" placeholder="0" min="0" step="100" value="500">
+                            <span class="input-suffix">/mo</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-calculate" id="calculateBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                            <line x1="9" y1="10" x2="15" y2="10"></line>
+                            <line x1="9" y1="14" x2="15" y2="14"></line>
+                            <line x1="9" y1="18" x2="13" y2="18"></line>
+                        </svg>
+                        Calculate Annual Rewards
+                    </button>
+                </div>
+                
+                <div id="calculatorResults" class="calculator-results hidden">
+                    <!-- Filters and Sort -->
+                    <div class="results-controls">
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                                Filters:
+                            </label>
+                            <select id="filterIssuer" class="filter-select">
+                                <option value="all">All Issuers</option>
+                                <option value="American Express">Amex</option>
+                                <option value="Chase">Chase</option>
+                                <option value="Citi">Citi</option>
+                                <option value="Capital One">Capital One</option>
+                                <option value="Discover">Discover</option>
+                                <option value="Wells Fargo">Wells Fargo</option>
+                            </select>
+                            
+                            <select id="filterFee" class="filter-select">
+                                <option value="all">All Fees</option>
+                                <option value="0">$0 Fee</option>
+                                <option value="100">Under $100</option>
+                                <option value="300">Under $300</option>
+                                <option value="301">$300+</option>
+                            </select>
+                            
+                            <select id="filterNetwork" class="filter-select">
+                                <option value="all">All Networks</option>
+                                <option value="Visa">Visa</option>
+                                <option value="Mastercard">Mastercard</option>
+                                <option value="American Express">Amex</option>
+                                <option value="Discover">Discover</option>
+                            </select>
+                        </div>
+                        
+                        <div class="sort-group">
+                            <label class="sort-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <polyline points="19 12 12 19 5 12"></polyline>
+                                </svg>
+                                Sort by:
+                            </label>
+                            <select id="sortBy" class="sort-select">
+                                <option value="netValue">Net Value (Best First)</option>
+                                <option value="rewards">Total Rewards</option>
+                                <option value="fee">Annual Fee (Low to High)</option>
+                                <option value="name">Card Name (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="calculatorResultsContent">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Spending Calculator Page -->
+        
+        <!-- Page: Rotating Categories -->
+        <div class="page" id="rotatingPage">
+            <div class="rotating-container">
+                <h2 class="rotating-title">Rotating Categories</h2>
+                <p class="rotating-subtitle">Track your 5% bonus categories and spending caps</p>
+                
+                <div class="current-quarter-banner">
+                    <div class="quarter-badge">Q1 2025</div>
+                    <div class="quarter-dates">Jan 1 - Mar 31, 2025</div>
+                </div>
+                
+                <div id="rotatingCardsList" class="rotating-cards-list">
+                    <!-- Rotating cards will be populated here -->
+                </div>
+                
+                <div class="upcoming-section">
+                    <h3 class="section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Upcoming Categories
+                    </h3>
+                    <div id="upcomingCategories" class="upcoming-list">
+                        <!-- Upcoming categories will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Rotating Categories Page -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-page="home" aria-label="Home">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            </svg>
+            <span class="nav-label">Home</span>
+        </button>
+        
+        <button class="nav-item" data-page="merchantSearch" aria-label="Search">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <span class="nav-label">Search</span>
+        </button>
+        
+        <button class="nav-item" data-page="calculator" aria-label="Calculator">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                <line x1="9" y1="10" x2="15" y2="10"></line>
+            </svg>
+            <span class="nav-label">Calc</span>
+        </button>
+        
+        <button class="nav-item" data-page="rotating" aria-label="Rotating">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+            </svg>
+            <span class="nav-label">5%</span>
+        </button>
+        
+        <button class="nav-item" data-page="recommend" aria-label="Recommend">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+            <span class="nav-label">Find</span>
+        </button>
+        
+        <button class="nav-item" data-page="compare" aria-label="Compare">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+            </svg>
+            <span class="nav-label">Compare</span>
+        </button>
+        
+        <button class="nav-item" data-page="settings" aria-label="Settings">
+            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span class="nav-label">Settings</span>
+        </button>
+    </nav>
+
+    <!-- Recommendation Modal -->
+    <div class="modal-overlay" id="recommendOverlay">
+        <div class="modal-container" id="recommendModal">
+            <!-- Category Selection View -->
+            <div class="modal-view" id="categoryView">
+                <div class="modal-header">
+                    <h2>Which card should I use?</h2>
+                    <button class="close-modal" id="closeRecommendBtn" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <p class="modal-subtitle">Select a spending category:</p>
+                    
+                    <div class="category-grid">
+                        <button class="category-btn" data-category="dining">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2v0a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zM21 15v7"></path>
+                            </svg>
+                            <span class="category-name">Dining</span>
+                        </button>
+                        <button class="category-btn" data-category="grocery">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="category-name">Grocery</span>
+                        </button>
+                        <button class="category-btn" data-category="flights">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3s-3-1-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+                            </svg>
+                            <span class="category-name">Flights</span>
+                        </button>
+                        <button class="category-btn" data-category="gas">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 2h12v13c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V2z"></path>
+                                <path d="M3 6h12M15 11l5-5v11a2 2 0 002 2h0a2 2 0 002-2v-4l-3-3"></path>
+                                <circle cx="18" cy="7" r="1"></circle>
+                                <path d="M5 22v-7M11 22v-7"></path>
+                            </svg>
+                            <span class="category-name">Gas</span>
+                        </button>
+                        <button class="category-btn" data-category="hotels">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 9a2 2 0 012-2h14a2 2 0 012 2M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M3 9V6a2 2 0 012-2h2M21 9V6a2 2 0 00-2-2h-2"></path>
+                                <path d="M9 21v-8a2 2 0 012-2h2a2 2 0 012 2v8"></path>
+                            </svg>
+                            <span class="category-name">Hotels</span>
+                        </button>
+                        <button class="category-btn" data-category="other">
+                            <svg class="category-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <span class="category-name">Other</span>
+                        </button>
+                    </div>
+
+                    <div class="amount-input">
+                        <label for="spendAmount">Purchase amount (optional):</label>
+                        <div class="input-group">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="spendAmount" placeholder="100" value="100" min="1" step="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div class="modal-view hidden" id="resultsView">
+                <div class="modal-header">
+                    <button class="back-btn" id="backBtn" aria-label="Back">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <h2 id="resultsTitle">Best Card for Dining</h2>
+                    <button class="close-modal" id="closeResultsBtn" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <div id="recommendationResults">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customize Quick Categories Modal -->
+    <div class="modal-overlay" id="customizeCategoriesOverlay">
+        <div class="modal-container" id="customizeCategoriesModal">
+            <div class="modal-view">
+                <div class="modal-header">
+                    <h2>Customize Quick Categories</h2>
+                    <button class="close-modal" id="closeCustomizeBtn" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <p class="modal-subtitle">Select 3 categories to show on your home screen:</p>
+                    
+                    <div class="category-select-grid">
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="dining" data-icon="dining" data-name="Dining">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2v0a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zM21 15v7"></path>
+                            </svg>
+                            <span class="select-name">Dining</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="grocery" data-icon="grocery" data-name="Grocery">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"></path>
+                            </svg>
+                            <span class="select-name">Grocery</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="flights" data-icon="flights" data-name="Flights">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3s-3-1-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+                            </svg>
+                            <span class="select-name">Flights</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="gas" data-icon="gas" data-name="Gas">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 2h12v13c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V2z"></path>
+                                <path d="M3 6h12M15 11l5-5v11a2 2 0 002 2h0a2 2 0 002-2v-4l-3-3"></path>
+                                <circle cx="18" cy="7" r="1"></circle>
+                                <path d="M5 22v-7M11 22v-7"></path>
+                            </svg>
+                            <span class="select-name">Gas</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="hotels" data-icon="hotels" data-name="Hotels">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 9a2 2 0 012-2h14a2 2 0 012 2M3 9v10a2 2 0 002 2h14a2 2 0 002-2V9M3 9V6a2 2 0 012-2h2M21 9V6a2 2 0 00-2-2h-2"></path>
+                                <path d="M9 21v-8a2 2 0 012-2h2a2 2 0 012 2v8"></path>
+                            </svg>
+                            <span class="select-name">Hotels</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                        <label class="category-select-item">
+                            <input type="checkbox" name="quickCategory" value="other" data-icon="other" data-name="Other">
+                            <svg class="select-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <span class="select-name">Other</span>
+                            <span class="select-check">✓</span>
+                        </label>
+                    </div>
+
+                    <button class="btn-save-categories" id="saveCategoriesBtn">
+                        Save Quick Categories
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Comparison Modal -->
+    <div class="modal-overlay" id="compareOverlay">
+        <div class="modal-container modal-container-wide" id="compareModal">
+            <div class="modal-view">
+                <div class="modal-header">
+                    <h2>Compare Cards</h2>
+                    <button class="close-modal" id="closeCompareBtn" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <!-- Card Selection -->
+                    <div id="cardSelection">
+                        <p class="modal-subtitle">Select 2-3 cards to compare:</p>
+                        <div id="compareCardList" class="compare-card-list">
+                            <!-- Cards will be populated here -->
+                        </div>
+                        <button class="btn-compare" id="startCompareBtn" disabled>
+                            Compare Selected Cards
+                        </button>
+                    </div>
+
+                    <!-- Comparison Results -->
+                    <div id="comparisonResults" class="hidden">
+                        <button class="back-btn" id="backToSelectionBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            Change Cards
+                        </button>
+                        <div id="comparisonTable">
+                            <!-- Comparison table will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Install Prompt (for PWA) -->
+    <div class="install-prompt" id="installPrompt" style="display: none;">
+        <div class="install-content">
+            <h3>Install Cardhawk</h3>
+            <p>Add to your home screen for quick access</p>
+            <div class="install-buttons">
+                <button class="btn-install" id="installBtn">Install</button>
+                <button class="btn-dismiss" id="dismissBtn">Not now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="fullscreen-overlay" id="welcomeScreen" style="display: none;">
+        <div class="welcome-container">
+            <div class="welcome-progress">
+                <span class="progress-dot active"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+            </div>
+            
+            <div class="welcome-content">
+                <h1 class="welcome-title">Stay Synced.<br>Stay Ahead.</h1>
+                <p class="welcome-subtitle">Maximize your credit card rewards with intelligent recommendations for every purchase</p>
+            </div>
+            
+            <div class="welcome-image">
+                <div class="card-stack">
+                    <div class="floating-card card-1"></div>
+                    <div class="floating-card card-2"></div>
+                    <div class="floating-card card-3"></div>
+                </div>
+            </div>
+            
+            <div class="welcome-actions">
+                <button class="btn-primary" id="getStartedBtn">Get Started</button>
+                <button class="btn-text" id="alreadyHaveAccountBtn">Already have an account? <strong>Login</strong></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div class="fullscreen-overlay" id="signupScreen" style="display: none;">
+        <div class="login-container">
+            <button class="close-auth" id="closeSignupBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <div class="login-logo">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            
+            <h2 class="login-title">Create Account</h2>
+            <p class="login-subtitle">Join thousands optimizing their rewards</p>
+            
+            <form class="login-form" id="signupForm">
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input type="text" id="signupName" placeholder="Full name" required>
+                </div>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" id="signupEmail" placeholder="Email address" required>
+                </div>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input type="password" id="signupPassword" placeholder="Password (min 8 characters)" required minlength="8">
+                </div>
+                
+                <div class="password-requirements">
+                    <small>Password must be at least 8 characters</small>
+                </div>
+                
+                <button type="submit" class="btn-login">Create Account</button>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <button type="button" class="btn-social google btn-google">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign up with Google
+                </button>
+            </form>
+            
+            <p class="signup-prompt">
+                Already have an account? <a href="#" id="switchToLoginBtn" class="signup-link">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="fullscreen-overlay" id="loginScreen" style="display: none;">
+        <div class="login-container">
+            <button class="close-auth" id="closeLoginBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <div class="login-logo">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            
+            <h2 class="login-title">Welcome back</h2>
+            
+            <form class="login-form" id="loginForm">
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" id="loginEmail" placeholder="Enter email address" required>
+                </div>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required minlength="6">
+                </div>
+                
+                <div class="login-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="javascript:void(0)" class="forgot-link" id="forgotPasswordLink" onclick="window.showForgotPassword()">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn-login">Login</button>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <button type="button" class="btn-social google btn-google">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Login with Google
+                </button>
+                
+                <button type="button" class="btn-social apple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    Login with Apple
+                </button>
+            </form>
+            
+            <p class="signup-prompt">
+                Don't have an account? <a href="#" id="signupLink"><strong>Sign up</strong></a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reset Password</h3>
+                <button class="modal-close" id="closeForgotPasswordModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form class="modal-form" id="forgotPasswordForm">
+                <p class="modal-description">Enter your email address and we'll send you a link to reset your password.</p>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                </div>
+                
+                <button type="submit" class="btn-modal-primary">Send Reset Link</button>
+                <button type="button" class="btn-modal-secondary" id="cancelResetBtn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal-overlay" id="profileEditModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="modal-close" id="closeProfileModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form class="modal-form" id="profileEditForm">
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input type="text" id="profileName" placeholder="Full name">
+                </div>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" id="profileEmail" placeholder="Email" disabled>
+                </div>
+                
+                <div class="form-divider">Change Password (optional)</div>
+                
+                <div class="input-field">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input type="password" id="newPassword" placeholder="New password (min 8 characters)" minlength="8">
+                </div>
+                
+                <button type="submit" class="btn-modal-primary">Save Changes</button>
+                <button type="button" class="btn-modal-secondary" id="cancelProfileBtn">Cancel</button>
+                
+                <div class="danger-zone">
+                    <button type="button" class="btn-danger-outline" id="deleteAccountBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

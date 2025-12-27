@@ -1,0 +1,17 @@
+{
+  "name": "cardhawk",
+  "version": "5.1.0",
+  "description": "Cardhawk - Maximize Your Credit Card Rewards",
+  "scripts": {
+    "dev": "python -m http.server 8001",
+    "start": "python -m http.server 8001"
+  },
+  "keywords": [
+    "credit-cards",
+    "rewards",
+    "finance",
+    "fintech"
+  ],
+  "author": "Cardhawk",
+  "license": "MIT"
+}

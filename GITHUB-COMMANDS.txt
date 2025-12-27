@@ -1,0 +1,168 @@
+====================================================================
+  CARDHAWK - GITHUB + VERCEL DEPLOYMENT COMMANDS
+====================================================================
+
+QUICK REFERENCE - Copy and paste these commands!
+
+====================================================================
+STEP 1: SETUP GIT (ONE TIME)
+====================================================================
+
+# Check if Git is installed
+git --version
+
+# If not installed, download from: https://git-scm.com/download/win
+
+# Configure Git (replace with YOUR info)
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+====================================================================
+STEP 2: CREATE GITHUB REPO (ONE TIME)
+====================================================================
+
+Go to: https://github.com/new
+
+Repository name: cardhawk
+Description: Credit card rewards optimizer
+Public: Yes
+DON'T check "Initialize with README"
+
+Click "Create repository"
+
+Copy the URL shown (e.g., https://github.com/yourusername/cardhawk.git)
+
+====================================================================
+STEP 3: PUSH TO GITHUB (ONE TIME)
+====================================================================
+
+# Navigate to folder
+cd C:\Users\andre\Desktop\cardhawk-deploy
+
+# Initialize Git
+git init
+
+# Add all files
+git add .
+
+# First commit
+git commit -m "Initial commit - Cardhawk v5.1"
+
+# Add remote (REPLACE WITH YOUR GITHUB URL!)
+git remote add origin https://github.com/YOUR-USERNAME/cardhawk.git
+
+# Rename branch
+git branch -M main
+
+# Push
+git push -u origin main
+
+====================================================================
+STEP 4: DEPLOY ON VERCEL (ONE TIME)
+====================================================================
+
+Go to: https://vercel.com/new
+
+1. Click "Import Git Repository"
+2. Choose GitHub
+3. Authorize Vercel
+4. Select "cardhawk" repo
+5. Click "Deploy"
+6. Wait 1-2 minutes
+7. Get your URL!
+
+====================================================================
+UPDATING YOUR APP (EVERY TIME YOU MAKE CHANGES)
+====================================================================
+
+# Navigate to folder
+cd C:\Users\andre\Desktop\cardhawk-deploy
+
+# See what changed
+git status
+
+# Add all changes
+git add .
+
+# Commit with message
+git commit -m "Description of what you changed"
+
+# Push to GitHub (triggers auto-deploy!)
+git push
+
+# Done! Vercel deploys automatically in 1-2 minutes
+
+====================================================================
+USEFUL GIT COMMANDS
+====================================================================
+
+# Check status
+git status
+
+# See what changed
+git diff
+
+# See commit history
+git log --oneline
+
+# Pull latest changes
+git pull
+
+# Undo last commit (keeps changes)
+git reset --soft HEAD~1
+
+# Discard all changes (careful!)
+git reset --hard
+
+====================================================================
+TROUBLESHOOTING
+====================================================================
+
+If "git not recognized":
+→ Install Git from https://git-scm.com/download/win
+
+If "permission denied":
+→ Use HTTPS URL: git remote set-url origin https://github.com/...
+
+If push fails:
+→ Pull first: git pull origin main --rebase
+→ Then push: git push
+
+If Vercel deploy fails:
+→ Check Vercel dashboard logs
+→ Try manual redeploy in Vercel dashboard
+
+====================================================================
+YOUR DEPLOYMENT INFO
+====================================================================
+
+GitHub Repo: https://github.com/_____________/cardhawk
+
+Vercel URL: https://cardhawk-____________.vercel.app
+
+Custom Domain: _________________________________
+
+====================================================================
+WORKFLOW
+====================================================================
+
+1. Make changes to files
+2. Test locally: python -m http.server 8001
+3. git add .
+4. git commit -m "Fixed bug XYZ"
+5. git push
+6. Vercel auto-deploys!
+7. Test on live URL
+8. Done! ✅
+
+====================================================================
+
+Quick deploy: Just these 3 commands!
+
+git add .
+git commit -m "Your message"
+git push
+
+That's it! Vercel handles the rest! 🚀
+
+====================================================================

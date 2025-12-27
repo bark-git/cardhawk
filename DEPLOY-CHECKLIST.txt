@@ -1,0 +1,88 @@
+====================================================================
+  CARDHAWK DEPLOYMENT CHECKLIST
+====================================================================
+
+BEFORE YOU DEPLOY
+====================================================================
+[✅] App tested locally and working
+[✅] All 20 cards displaying properly
+[✅] Login/signup works
+[✅] Calculator works
+[✅] Compare cards works
+[✅] No console errors
+[✅] Supabase credentials in code
+
+VERCEL SETUP
+====================================================================
+[ ] Go to https://vercel.com/signup
+[ ] Sign up (use GitHub or email)
+[ ] Verify email
+[ ] Account created
+
+DEPLOYMENT - EASIEST METHOD (DRAG & DROP)
+====================================================================
+[ ] Go to https://vercel.com/new
+[ ] Drag the cardhawk-deploy folder
+[ ] OR click "Browse" and select folder
+[ ] Click "Deploy"
+[ ] Wait 1-2 minutes
+[ ] Get your URL (e.g., cardhawk-xxx.vercel.app)
+
+DEPLOYMENT - CLI METHOD
+====================================================================
+[ ] Install: npm install -g vercel
+[ ] Navigate: cd C:\Users\andre\Desktop\cardhawk-deploy
+[ ] Login: vercel login
+[ ] Deploy preview: vercel
+[ ] Deploy production: vercel --prod
+[ ] Get your URL
+
+AFTER DEPLOYMENT
+====================================================================
+[ ] Open Vercel URL in browser
+[ ] Test: App loads
+[ ] Test: Login works
+[ ] Test: Browse cards
+[ ] Test: Calculator works
+[ ] Test: On mobile device
+[ ] Test: Share with friend
+
+SHARE YOUR APP
+====================================================================
+[ ] Copy your Vercel URL
+[ ] Share with 2-3 friends first
+[ ] Post on social media (optional)
+[ ] Gather feedback
+[ ] Fix any bugs
+
+NEXT STEPS
+====================================================================
+[ ] Monitor for bugs
+[ ] Collect user feedback
+[ ] Plan next features
+[ ] Consider custom domain
+[ ] Add analytics (optional)
+
+====================================================================
+YOUR DEPLOYMENT INFO
+====================================================================
+
+Vercel URL: _________________________________
+
+Custom Domain (optional): ___________________
+
+Deployed Date: ______________________________
+
+Version: 5.1
+
+====================================================================
+QUICK REFERENCE
+====================================================================
+
+Vercel Dashboard: https://vercel.com/dashboard
+Update App: vercel --prod (in folder)
+View Logs: Vercel dashboard → Project → Deployments
+
+====================================================================
+
+Ready? Let's deploy! 🚀
