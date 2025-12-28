@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beta Code Admin - Cardhawk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #CD9935;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #999;
+            margin-bottom: 2rem;
+        }
+        
+        .section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #3a3a3a;
+        }
+        
+        .section-title {
+            color: #CD9935;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            color: #ccc;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        input, select {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #CD9935;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #CD9935, #E5B558);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #CD9935;
+            color: #CD9935;
+        }
+        
+        .code-display {
+            background: #1a1a1a;
+            border: 2px solid #CD9935;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            text-align: center;
+            margin-top: 1rem;
+            color: #CD9935;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        
+        th {
+            background: #1a1a1a;
+            color: #CD9935;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #333;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-active {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .badge-inactive {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .badge-founder {
+            background: #CD9935;
+            color: white;
+        }
+        
+        .badge-general {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .badge-influencer {
+            background: #a855f7;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Beta Code Admin</h1>
+        <p class="subtitle">Generate and manage beta access codes for Cardhawk</p>
+        
+        <div id="authCheck" class="loading">
+            Checking authentication...
+        </div>
+        
+        <div id="adminContent" style="display: none;">
+            <!-- Generate Code Section -->
+            <div class="section">
+                <h2 class="section-title">
+                    ✨ Generate New Code
+                </h2>
+                
+                <form id="generateForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="codePrefix">Code Prefix</label>
+                            <input type="text" id="codePrefix" placeholder="FRIEND" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="codeLimit">Use Limit</label>
+                            <input type="number" id="codeLimit" value="1" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="codeType">Code Type</label>
+                            <select id="codeType" required>
+                                <option value="general">General</option>
+                                <option value="friend">Friend</option>
+                                <option value="influencer">Influencer</option>
+                                <option value="community">Community</option>
+                                <option value="founder">Founder</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit">Generate Code</button>
+                </form>
+                
+                <div id="generatedCode" style="display: none;">
+                    <div class="code-display" id="newCodeDisplay"></div>
+                </div>
+            </div>
+            
+            <!-- Code Statistics -->
+            <div class="section">
+                <h2 class="section-title">
+                    📊 Code Statistics
+                </h2>
+                <button class="btn-secondary" id="refreshStats">Refresh</button>
+                <div id="statsTable"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { supabase } from './supabase-client.js';
+        
+        // Check authentication
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+                document.getElementById('authCheck').innerHTML = `
+                    <div class="error">
+                        <strong>Access Denied</strong>
+                        <p>You must be logged in as an admin to access this page.</p>
+                    </div>
+                `;
+                return false;
+            }
+            
+            // You can add additional admin check here if needed
+            // For now, any logged-in user can access
+            
+            document.getElementById('authCheck').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            return true;
+        }
+        
+        // Generate code
+        document.getElementById('generateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const prefix = document.getElementById('codePrefix').value.trim().toUpperCase();
+            const limit = parseInt(document.getElementById('codeLimit').value);
+            const type = document.getElementById('codeType').value;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Generating...';
+                
+                const { data, error } = await supabase.rpc('generate_beta_code', {
+                    p_prefix: prefix,
+                    p_uses_limit: limit,
+                    p_code_type: type,
+                    p_created_by: 'admin'
+                });
+                
+                if (error) throw error;
+                
+                // Display the new code
+                document.getElementById('newCodeDisplay').textContent = data;
+                document.getElementById('generatedCode').style.display = 'block';
+                
+                // Refresh stats
+                await loadStats();
+                
+                // Reset form
+                e.target.reset();
+                
+            } catch (error) {
+                alert('Error generating code: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Generate Code';
+            }
+        });
+        
+        // Load stats
+        async function loadStats() {
+            try {
+                const { data, error } = await supabase
+                    .from('beta_code_stats')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Limit</th>
+                                <th>Remaining</th>
+                                <th>Used</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(code => `
+                                <tr>
+                                    <td style="font-family: monospace; color: #CD9935;">${code.code}</td>
+                                    <td><span class="badge badge-${code.code_type}">${code.code_type}</span></td>
+                                    <td>${code.uses_limit}</td>
+                                    <td>${code.uses_remaining}</td>
+                                    <td>${code.uses_consumed}</td>
+                                    <td><span class="badge ${code.is_active ? 'badge-active' : 'badge-inactive'}">${code.is_active ? 'Active' : 'Inactive'}</span></td>
+                                    <td>${new Date(code.created_at).toLocaleDateString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('statsTable').innerHTML = tableHTML;
+                
+            } catch (error) {
+                document.getElementById('statsTable').innerHTML = `
+                    <div class="error">Error loading stats: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // Refresh button
+        document.getElementById('refreshStats').addEventListener('click', loadStats);
+        
+        // Initialize
+        checkAuth().then(isAuth => {
+            if (isAuth) {
+                loadStats();
+            }
+        });
+    </script>
+</body>
+</html>

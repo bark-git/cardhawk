@@ -5697,3 +5697,60 @@ body.dark-mode .flag-card-name {
     margin-top: var(--space-md);
   }
 }
+
+/* ===================================
+   BETA CODE FIELD
+   =================================== */
+#betaCode {
+  padding-right: 3rem;
+}
+
+.beta-code-help {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: var(--transition-fast);
+}
+
+.beta-code-help:hover {
+  opacity: 0.7;
+}
+
+.beta-code-info {
+  background: rgba(205, 153, 53, 0.1);
+  border-left: 3px solid var(--accent-gold);
+  padding: var(--space-md);
+  border-radius: 8px;
+  margin-bottom: var(--space-md);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.beta-code-info p {
+  margin: 0 0 0.5rem 0;
+}
+
+.beta-code-info p:last-child {
+  margin-bottom: 0;
+}
+
+.beta-code-info a {
+  color: var(--accent-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.beta-code-info a:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .beta-code-info {
+  background: rgba(205, 153, 53, 0.15);
+}
+

@@ -1754,14 +1754,68 @@ class CardhawkApp {
         const fullName = document.getElementById('signupName')?.value || '';
         const state = document.getElementById('signupState')?.value || '';
         const emailOptIn = document.getElementById('emailOptIn')?.checked || false;
+        const betaCode = document.getElementById('betaCode')?.value?.trim()?.toUpperCase() || '';
         const submitBtn = signupForm.querySelector('button[type="submit"]');
         
         try {
           submitBtn.disabled = true;
+          submitBtn.textContent = 'Validating code...';
+          
+          // Validate beta code first
+          if (!betaCode) {
+            throw new Error('Please enter a beta access code');
+          }
+          
+          const { supabase } = await import('./supabase-client.js');
+          
+          // Call Supabase function to validate code
+          const { data: validationResult, error: validationError } = await supabase
+            .rpc('validate_beta_code', { 
+              p_code: betaCode,
+              p_user_email: email
+            });
+          
+          if (validationError) {
+            throw new Error('Error validating beta code. Please try again.');
+          }
+          
+          if (!validationResult || validationResult.length === 0) {
+            throw new Error('Unable to validate beta code');
+          }
+          
+          const validation = validationResult[0];
+          
+          if (!validation.is_valid) {
+            throw new Error(validation.message || 'Invalid beta code');
+          }
+          
+          // Beta code is valid! Proceed with signup
           submitBtn.textContent = 'Creating account...';
           
-          // Sign up with enhanced metadata
-          await auth.signUp(email, password, fullName, { state, emailOptIn });
+          // Sign up with enhanced metadata including beta code
+          const { data: signupData, error: signupError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: fullName,
+                state: state,
+                email_opt_in: emailOptIn,
+                beta_code_used: betaCode
+              }
+            }
+          });
+          
+          if (signupError) throw signupError;
+          
+          // After successful signup, consume the beta code
+          if (signupData.user) {
+            await supabase.rpc('consume_beta_code', {
+              p_code: betaCode,
+              p_user_id: signupData.user.id,
+              p_user_email: email
+            });
+          }
           
           this.closeSignupScreen();
           this.showSuccessMessage('Account created! Check your email to verify your account, then login.');
@@ -1775,6 +1829,24 @@ class CardhawkApp {
         }
       });
     }
+    
+    // Beta code help button
+    const betaCodeHelp = document.getElementById('betaCodeHelp');
+    const betaCodeInfo = document.getElementById('betaCodeInfo');
+    if (betaCodeHelp && betaCodeInfo) {
+      betaCodeHelp.addEventListener('click', () => {
+        betaCodeInfo.style.display = betaCodeInfo.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+    
+    // Join waitlist link
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'joinWaitlistLink') {
+        e.preventDefault();
+        // For now, just show an alert. Later, this can open a waitlist modal or redirect to landing page
+        alert('Waitlist coming soon! For now, contact us at hello@cardhawk.app to request a beta code.');
+      }
+    });
     
     // Forgot password link (use event delegation)
     document.addEventListener('click', (e) => {
