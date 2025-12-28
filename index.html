@@ -173,12 +173,6 @@
                         <h2 class="profile-name" id="profileUserName">Guest User</h2>
                         <p class="profile-email" id="profileUserEmail">Not logged in</p>
                     </div>
-                    <button type="button" class="profile-edit-btn" id="profileEditBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
                 </div>
 
                 <!-- Wallet Stats -->
@@ -213,12 +207,23 @@
                 <!-- Update Wallet Button -->
                 <button type="button" class="btn-update-wallet" id="updateWalletBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                        <path d="M3 3v5h5"></path>
-                        <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
-                        <path d="M16 21h5v-5"></path>
+                        <!-- Credit card -->
+                        <rect x="1" y="5" width="22" height="14" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                        <!-- Plus sign -->
+                        <line x1="12" y1="13" x2="12" y2="17"></line>
+                        <line x1="10" y1="15" x2="14" y2="15"></line>
                     </svg>
                     Update Wallet
+                </button>
+
+                <!-- Edit Profile Button -->
+                <button type="button" class="btn-edit-profile" id="profileEditBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit Profile
                 </button>
 
                 <!-- Quick Actions -->
@@ -239,8 +244,17 @@
         <!-- Page: Wallet Management -->
         <div class="page" id="walletPage">
             <div class="wallet-container">
-                <h2 class="page-title">My Wallet</h2>
-                <p class="page-subtitle">Manage your credit cards</p>
+                <div class="page-header-with-back">
+                    <button class="btn-back" id="walletBackBtn" aria-label="Go back">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <div>
+                        <h2 class="page-title">My Wallet</h2>
+                        <p class="page-subtitle">Manage your credit cards</p>
+                    </div>
+                </div>
 
                 <!-- Active Cards Section -->
                 <div class="wallet-section">
@@ -409,6 +423,14 @@
                 
                 <!-- Sign Out (shown when logged in) -->
                 <div class="settings-section" id="signOutSection" style="display: none;">
+                    <button class="settings-action-btn danger-outline full-width" id="deleteAccountBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete Account
+                    </button>
+                    
                     <button class="settings-action-btn danger full-width" id="logoutBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -1424,16 +1446,6 @@
                 
                 <button type="submit" class="btn-modal-primary">Save Changes</button>
                 <button type="button" class="btn-modal-secondary" id="cancelProfileBtn">Cancel</button>
-                
-                <div class="danger-zone">
-                    <button type="button" class="btn-danger-outline" id="deleteAccountBtn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                        Delete Account
-                    </button>
-                </div>
             </form>
         </div>
     </div>
