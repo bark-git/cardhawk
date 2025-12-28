@@ -23,6 +23,7 @@ class CardhawkApp {
     this.currentUser = null;
     this.authInitialized = false;
     this.cardsToShow = 5; // Show 5 cards initially
+    this.hasLeftHome = false; // Track if user has navigated away from home
     
     // Initialize app immediately (don't wait for auth)
     this.init();
@@ -217,6 +218,25 @@ class CardhawkApp {
     if (activeCardsBadge) activeCardsBadge.textContent = cardCount;
   }
   
+  showWelcomeMessage() {
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const welcomeName = document.getElementById('welcomeName');
+    
+    if (!welcomeMessage || !welcomeName) return;
+    
+    // Get user's name
+    let displayName = 'User';
+    if (this.currentUser) {
+      displayName = this.currentUser.user_metadata?.full_name || 
+                   this.currentUser.email?.split('@')[0] || 
+                   'User';
+    }
+    
+    // Update name and show message
+    welcomeName.textContent = displayName;
+    welcomeMessage.style.display = 'flex';
+  }
+  
   async loadUserDataFromSupabase() {
     if (!this.currentUser) return;
     
@@ -250,6 +270,7 @@ class CardhawkApp {
     this.loadTheme();
     this.applyDarkMode();
     this.updateNavButtons();
+    this.showWelcomeMessage(); // Show welcome on initial load
   }
   
   // Render all cards in the carousel
@@ -973,22 +994,35 @@ class CardhawkApp {
   
   openCompareModal() {
     this.selectedCompareCards = [];
-    document.getElementById('compareOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const overlay = document.getElementById('compareOverlay');
+    if (overlay) {
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
     this.renderCompareCardList();
     this.showCardSelection();
   }
   
   closeCompareModal() {
-    document.getElementById('compareOverlay').classList.remove('active');
+    const overlay = document.getElementById('compareOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
     document.body.style.overflow = '';
   }
   
   renderCompareCardList() {
     const container = document.getElementById('compareCardList');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     const activeCards = this.cards.filter(card => this.isCardActive(card.id));
+    
+    if (activeCards.length === 0) {
+      container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-secondary);">Add cards to your wallet first!</p>';
+      return;
+    }
     
     activeCards.forEach(card => {
       const item = document.createElement('div');
@@ -1493,10 +1527,10 @@ class CardhawkApp {
       });
     });
     
-    // Profile page
-    const profileEditBtnMain = document.getElementById('profileEditBtn');
-    if (profileEditBtnMain) {
-      profileEditBtnMain.addEventListener('click', () => this.showProfileEditModal());
+    // Profile page buttons
+    const profileEditBtn = document.getElementById('profileEditBtn');
+    if (profileEditBtn) {
+      profileEditBtn.addEventListener('click', () => this.showProfileEditModal());
     }
     
     const updateWalletBtn = document.getElementById('updateWalletBtn');
@@ -1973,6 +2007,10 @@ class CardhawkApp {
       });
     }
     
+    // Profile edit modal close buttons
+    this.safeAddListener('closeProfileModal', 'click', () => this.closeProfileEditModal());
+    this.safeAddListener('cancelProfileBtn', 'click', () => this.closeProfileEditModal());
+    
     // Delete account
     const deleteAccountBtn = document.getElementById('deleteAccountBtn');
     if (deleteAccountBtn) {
@@ -2198,6 +2236,22 @@ class CardhawkApp {
   // Page Navigation
   navigateToPage(pageName) {
     this.currentPage = pageName;
+    
+    // Handle welcome message - show on first home visit, hide after leaving
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    if (welcomeMessage) {
+      if (pageName === 'home' && !this.hasLeftHome) {
+        // Show welcome message on home page if user hasn't left yet
+        this.showWelcomeMessage();
+      } else if (pageName !== 'home') {
+        // User left home page, mark it
+        this.hasLeftHome = true;
+        welcomeMessage.style.display = 'none';
+      } else if (pageName === 'home' && this.hasLeftHome) {
+        // Returned to home after leaving - hide welcome
+        welcomeMessage.style.display = 'none';
+      }
+    }
     
     // Handle special modal-based pages differently
     if (pageName === 'recommend') {

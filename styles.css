@@ -538,6 +538,48 @@ body.theme-bold {
 }
 
 /* ===================================
+   WELCOME MESSAGE
+   =================================== */
+.welcome-message {
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: var(--space-md);
+  animation: fadeIn 0.6s ease;
+}
+
+.welcome-text {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.02em;
+}
+
+.welcome-name {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+body.dark-mode .welcome-text {
+  color: #FFFFFF;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================================
    QUICK CATEGORIES
    =================================== */
 .quick-categories {
@@ -1229,7 +1271,7 @@ body.theme-bold .indicator.active {
 .modal-subtitle {
   font-size: 1rem;
   color: var(--text-secondary);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
   text-align: center;
 }
 
@@ -2231,6 +2273,19 @@ body.theme-bold .nav-label {
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
+  padding: 0 10%;
+}
+
+@media (max-width: 768px) {
+  .profile-stats-grid {
+    padding: 0 10%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-stats-grid {
+    padding: 0 5%;
+  }
 }
 
 .stat-card {
@@ -2309,6 +2364,34 @@ body.theme-bold .nav-label {
   transform: translateY(0);
 }
 
+.btn-edit-profile {
+  width: 100%;
+  background: transparent;
+  color: var(--accent-gold);
+  border: 2px solid var(--accent-gold);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: 12px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-lg);
+}
+
+.btn-edit-profile:hover {
+  background: rgba(205, 153, 53, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-edit-profile:active {
+  transform: translateY(0);
+}
+
 .profile-actions-section {
   margin-top: var(--space-xl);
 }
@@ -2352,6 +2435,37 @@ body.theme-bold .nav-label {
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-lg);
+}
+
+.page-header-with-back {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.btn-back {
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.btn-back:hover {
+  background: rgba(205, 153, 53, 0.1);
+}
+
+.btn-back svg {
+  width: 24px;
+  height: 24px;
 }
 
 .page-title {
@@ -2477,6 +2591,13 @@ body.dark-mode .wallet-card-item {
 .wallet-card-issuer {
   font-size: 0.75rem;
   color: var(--text-secondary);
+}
+
+.wallet-card-fee {
+  font-size: 0.7rem;
+  color: var(--accent-gold);
+  font-weight: 600;
+  margin-top: 0.25rem;
 }
 
 /* ===================================
@@ -5282,7 +5403,7 @@ body.dark-mode .settings-action-btn.secondary {
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 .feedback-form .input-field {
@@ -5355,6 +5476,23 @@ body.dark-mode .feedback-form textarea {
   gap: var(--space-md);
   margin-top: var(--space-md);
   flex-direction: row-reverse;
+}
+
+/* Mobile optimization for feedback modal */
+@media (max-width: 768px) {
+  .modal-container {
+    max-height: 85vh;
+    margin: auto 1rem;
+  }
+  
+  .modal-content {
+    padding: var(--space-md);
+    padding-bottom: var(--space-xl); /* Extra space for buttons */
+  }
+  
+  .feedback-form textarea {
+    max-height: 120px; /* Limit textarea height on mobile */
+  }
 }
 
 .btn-modal-primary {
