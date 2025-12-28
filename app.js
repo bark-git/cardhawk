@@ -1575,8 +1575,18 @@ class CardhawkApp {
       });
     });
     
-    // Theme toggle
-    this.safeAddListener('themeBtn', 'click', () => this.toggleTheme());
+    // Theme toggle in menu
+    this.safeAddListener('menuLuxuryBtn', 'click', () => {
+      this.setTheme('luxury');
+      document.getElementById('menuLuxuryBtn').classList.add('active');
+      document.getElementById('menuBoldBtn').classList.remove('active');
+    });
+    
+    this.safeAddListener('menuBoldBtn', 'click', () => {
+      this.setTheme('bold');
+      document.getElementById('menuBoldBtn').classList.add('active');
+      document.getElementById('menuLuxuryBtn').classList.remove('active');
+    });
     
     // Point value inputs (event delegation)
     document.addEventListener('change', (e) => {
@@ -2418,31 +2428,72 @@ class CardhawkApp {
   }
   
   // Theme Management
-  toggleTheme() {
+  setTheme(theme) {
     const body = document.body;
-    const themeIcon = document.querySelector('.theme-icon');
     
-    if (body.classList.contains('theme-bold')) {
-      body.classList.remove('theme-bold');
-      themeIcon.textContent = '🌙';
-      localStorage.setItem('cardhawk-theme', 'luxury');
-    } else {
+    if (theme === 'bold') {
       body.classList.add('theme-bold');
-      themeIcon.textContent = '☀️';
       localStorage.setItem('cardhawk-theme', 'bold');
+    } else {
+      body.classList.remove('theme-bold');
+      localStorage.setItem('cardhawk-theme', 'luxury');
     }
+    
+    // Update menu buttons
+    const luxuryBtn = document.getElementById('menuLuxuryBtn');
+    const boldBtn = document.getElementById('menuBoldBtn');
+    if (luxuryBtn && boldBtn) {
+      if (theme === 'bold') {
+        boldBtn.classList.add('active');
+        luxuryBtn.classList.remove('active');
+      } else {
+        luxuryBtn.classList.add('active');
+        boldBtn.classList.remove('active');
+      }
+    }
+    
+    // Update settings page buttons
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      if (option.dataset.theme === theme) {
+        option.classList.add('active');
+      } else {
+        option.classList.remove('active');
+      }
+    });
   }
   
   loadTheme() {
     const savedTheme = localStorage.getItem('cardhawk-theme');
-    const themeIcon = document.querySelector('.theme-icon');
     
     if (savedTheme === 'bold') {
       document.body.classList.add('theme-bold');
-      themeIcon.textContent = '☀️';
-    } else {
-      themeIcon.textContent = '🌙';
     }
+    
+    // Update menu buttons
+    const luxuryBtn = document.getElementById('menuLuxuryBtn');
+    const boldBtn = document.getElementById('menuBoldBtn');
+    if (luxuryBtn && boldBtn) {
+      if (savedTheme === 'bold') {
+        boldBtn.classList.add('active');
+        luxuryBtn.classList.remove('active');
+      } else {
+        luxuryBtn.classList.add('active');
+        boldBtn.classList.remove('active');
+      }
+    }
+    
+    // Update settings page buttons
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      if (savedTheme === 'bold' && option.dataset.theme === 'bold') {
+        option.classList.add('active');
+      } else if (savedTheme !== 'bold' && option.dataset.theme === 'luxury') {
+        option.classList.add('active');
+      } else {
+        option.classList.remove('active');
+      }
+    });
   }
   
   // Dark Mode Management (for Bold Modern theme only)
@@ -2535,26 +2586,7 @@ class CardhawkApp {
   }
   
   switchThemeFromSettings(themeName) {
-    const body = document.body;
-    const themeIcon = document.querySelector('.theme-icon');
-    
-    if (themeName === 'bold') {
-      body.classList.add('theme-bold');
-      themeIcon.textContent = '☀️';
-      localStorage.setItem('cardhawk-theme', 'bold');
-    } else {
-      body.classList.remove('theme-bold');
-      themeIcon.textContent = '🌙';
-      localStorage.setItem('cardhawk-theme', 'luxury');
-    }
-    
-    // Update active state
-    document.querySelectorAll('.theme-option').forEach(opt => {
-      opt.classList.remove('active');
-      if (opt.dataset.theme === themeName) {
-        opt.classList.add('active');
-      }
-    });
+    this.setTheme(themeName);
     
     // Update dark mode visibility
     this.applyDarkMode();

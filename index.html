@@ -33,13 +33,6 @@
         </button>
     </div>
 
-    <!-- Theme Toggle -->
-    <div class="theme-toggle">
-        <button id="themeBtn" aria-label="Toggle theme">
-            <span class="theme-icon">🌙</span>
-        </button>
-    </div>
-
     <!-- Menu Popup -->
     <div class="menu-popup" id="menuPopup" style="display: none;">
         <button type="button" class="menu-popup-item" id="menuProfileBtn">
@@ -66,6 +59,24 @@
         </button>
 
         <div class="menu-popup-divider"></div>
+
+        <div class="menu-popup-item theme-selector">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <div class="menu-theme-options">
+                <button class="menu-theme-btn active" data-theme="luxury" id="menuLuxuryBtn">Luxury</button>
+                <button class="menu-theme-btn" data-theme="bold" id="menuBoldBtn">Bold</button>
+            </div>
+        </div>
 
         <button type="button" class="menu-popup-item" id="menuDarkModeBtn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -374,6 +385,65 @@
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                                 <polyline points="15 3 21 3 21 9"></polyline>
                                 <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Socials Section -->
+                <div class="settings-section">
+                    <h3 class="settings-section-title bold">Socials</h3>
+                    
+                    <div class="settings-item">
+                        <a href="https://x.com/cardhawkapp" target="_blank" rel="noopener noreferrer" class="settings-link">
+                            <div class="settings-item-info">
+                                <div class="settings-item-label">Follow us on X</div>
+                                <div class="settings-item-description">@cardhawkapp</div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <a href="https://instagram.com/cardhawkapp" target="_blank" rel="noopener noreferrer" class="settings-link">
+                            <div class="settings-item-info">
+                                <div class="settings-item-label">Follow us on Instagram</div>
+                                <div class="settings-item-description">@cardhawkapp</div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <a href="https://tiktok.com/@cardhawkapp" target="_blank" rel="noopener noreferrer" class="settings-link">
+                            <div class="settings-item-info">
+                                <div class="settings-item-label">Follow us on TikTok</div>
+                                <div class="settings-item-description">@cardhawkapp</div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <a href="https://apps.apple.com/app/cardhawk" target="_blank" rel="noopener noreferrer" class="settings-link">
+                            <div class="settings-item-info">
+                                <div class="settings-item-label">Rate Cardhawk</div>
+                                <div class="settings-item-description">Help us grow with a review</div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                             </svg>
                         </a>
                     </div>

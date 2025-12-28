@@ -2303,6 +2303,8 @@ body.theme-bold .nav-label {
   flex-direction: column;
   gap: var(--space-md);
   transition: var(--transition-fast);
+  min-height: 120px; /* Ensure consistent height */
+  flex: 1; /* Equal width distribution */
 }
 
 .stat-card:hover {
@@ -2683,6 +2685,54 @@ body.dark-mode .menu-popup {
 
 body.dark-mode .menu-popup-divider {
   background: rgba(255,255,255,0.1);
+}
+
+/* Menu Theme Selector */
+.menu-popup-item.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: default;
+}
+
+.menu-popup-item.theme-selector:hover {
+  background: transparent;
+}
+
+.menu-theme-options {
+  display: flex;
+  gap: var(--space-xs);
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.menu-theme-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+body.dark-mode .menu-theme-btn {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.menu-theme-btn:hover {
+  background: rgba(205, 153, 53, 0.1);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+}
+
+.menu-theme-btn.active {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: white;
 }
 
 .toggle-switch-small {
