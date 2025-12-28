@@ -580,6 +580,143 @@ body.dark-mode .welcome-text {
 }
 
 /* ===================================
+   MERCHANT SEARCH (HOME PAGE)
+   =================================== */
+.merchant-search-container {
+  padding: 0 var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-md);
+  pointer-events: none;
+  stroke: var(--text-secondary);
+}
+
+.merchant-search-input {
+  width: 100%;
+  padding: var(--space-md) var(--space-md) var(--space-md) 3rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: var(--transition-fast);
+}
+
+.merchant-search-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  background: var(--bg-primary);
+}
+
+.merchant-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .merchant-search-input {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .merchant-search-input:focus {
+  border-color: var(--accent-gold);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.merchant-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-xs);
+  background: var(--bg-primary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+body.dark-mode .merchant-search-results {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.merchant-result-item {
+  padding: var(--space-md);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.merchant-result-item:last-child {
+  border-bottom: none;
+}
+
+.merchant-result-item:hover {
+  background: rgba(205, 153, 53, 0.1);
+}
+
+body.dark-mode .merchant-result-item {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ===================================
+   HOME ACTION BUTTONS
+   =================================== */
+.home-action-buttons {
+  padding: 0 var(--space-lg);
+  margin-bottom: var(--space-xl);
+  display: flex;
+  gap: var(--space-md);
+}
+
+.home-action-buttons .btn-update-wallet,
+.home-action-buttons .btn-edit-profile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.home-action-buttons .btn-update-wallet {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  color: white;
+  border: none;
+}
+
+.home-action-buttons .btn-edit-profile {
+  background: transparent;
+  color: var(--accent-gold);
+  border: 2px solid var(--accent-gold);
+}
+
+.home-action-buttons .btn-update-wallet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(205, 153, 53, 0.3);
+}
+
+.home-action-buttons .btn-edit-profile:hover {
+  background: rgba(205, 153, 53, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ===================================
    QUICK CATEGORIES
    =================================== */
 .quick-categories {
@@ -2276,7 +2413,7 @@ body.theme-bold .nav-label {
 
 .profile-stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* Force equal widths */
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
   padding: 0 15%;
@@ -2303,8 +2440,8 @@ body.theme-bold .nav-label {
   flex-direction: column;
   gap: var(--space-md);
   transition: var(--transition-fast);
-  min-height: 120px; /* Ensure consistent height */
-  flex: 1; /* Equal width distribution */
+  min-width: 0; /* Prevent overflow */
+  width: 100%; /* Fill grid cell */
 }
 
 .stat-card:hover {
@@ -2341,6 +2478,9 @@ body.theme-bold .nav-label {
   font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 500;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ... if too long */
 }
 
 .btn-update-wallet {

@@ -116,147 +116,98 @@
         <div class="page active" id="homePage">
             <!-- Welcome Message -->
             <div class="welcome-message" id="welcomeMessage" style="display: none;">
-                <span class="welcome-text">Welcome</span>
+                <span class="welcome-text">Welcome back,</span>
                 <span class="welcome-name" id="welcomeName">User</span>
+                👋
+            </div>
+            
+            <!-- Profile Stats (from Profile page) -->
+            <div class="profile-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="walletCardCount">0</div>
+                        <div class="stat-label">Cards in Wallet</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="walletAnnualCost">$0</div>
+                        <div class="stat-label">Annual Fees</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merchant Search -->
+            <div class="merchant-search-container">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="merchantSearchInput" 
+                        class="merchant-search-input" 
+                        placeholder="Where are you shopping?"
+                        autocomplete="off"
+                    />
+                </div>
+                <div id="merchantSearchResults" class="merchant-search-results" style="display: none;">
+                    <!-- Search results will appear here -->
+                </div>
             </div>
             
             <!-- Quick Categories -->
             <div class="quick-categories" id="quickCategories">
-            <div class="quick-categories-header">
-                <h3>Quick Recommendations</h3>
-                <button class="customize-btn" id="customizeCategoriesBtn" aria-label="Customize categories">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M12 1v6m0 6v6m5.2-15.4l-4.2 4.2m-6 6l-4.2 4.2m15.4 0l-4.2-4.2m-6-6L3.8 3.8"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="quick-category-grid" id="quickCategoryGrid">
-                <!-- Quick categories will be populated here -->
-            </div>
-        </div>
-
-        <!-- Recommendation Button -->
-        <div class="recommendation-cta">
-            <button class="btn-recommend" id="recommendBtn">
-                <svg class="btn-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <circle cx="12" cy="12" r="6"></circle>
-                    <circle cx="12" cy="12" r="2"></circle>
-                </svg>
-                <span class="btn-text">Which card should I use?</span>
-            </button>
-        </div>
-
-        <!-- Card Carousel -->
-        <div class="card-carousel">
-            <div class="carousel-track" id="carouselTrack">
-                <!-- Cards will be injected here by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Card Indicators -->
-        <div class="card-indicators" id="indicators">
-            <!-- Indicators will be injected here -->
-        </div>
-
-        <!-- Card Navigation -->
-        <div class="card-nav">
-            <button class="nav-btn nav-prev" id="prevBtn" aria-label="Previous card">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            <button class="nav-btn nav-next" id="nextBtn" aria-label="Next card">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-        </div>
-        </div>
-        <!-- End Home Page -->
-
-        <!-- Page: Profile -->
-        <div class="page" id="profilePage">
-            <div class="profile-container">
-                <div class="profile-header-section">
-                    <div class="profile-avatar">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
+                <div class="quick-categories-header">
+                    <h3>Quick Recommendations</h3>
+                    <button class="customize-btn" id="customizeCategoriesBtn" aria-label="Customize categories">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m5.2-15.4l-4.2 4.2m-6 6l-4.2 4.2m15.4 0l-4.2-4.2m-6-6L3.8 3.8"></path>
                         </svg>
-                    </div>
-                    <div class="profile-info">
-                        <h2 class="profile-name" id="profileUserName">Guest User</h2>
-                        <p class="profile-email" id="profileUserEmail">Not logged in</p>
-                    </div>
+                    </button>
                 </div>
-
-                <!-- Wallet Stats -->
-                <div class="profile-stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                            </svg>
-                        </div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="walletCardCount">0</div>
-                            <div class="stat-label">Cards in Wallet</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="walletAnnualCost">$0</div>
-                            <div class="stat-label">Annual Fees</div>
-                        </div>
-                    </div>
+                <div class="quick-category-grid" id="quickCategoryGrid">
+                    <!-- Quick categories will be populated here -->
                 </div>
+            </div>
 
-                <!-- Update Wallet Button -->
+            <!-- Action Buttons -->
+            <div class="home-action-buttons">
                 <button type="button" class="btn-update-wallet" id="updateWalletBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <!-- Credit card -->
                         <rect x="1" y="5" width="22" height="14" rx="2" ry="2"></rect>
                         <line x1="1" y1="10" x2="23" y2="10"></line>
-                        <!-- Plus sign -->
                         <line x1="12" y1="13" x2="12" y2="17"></line>
                         <line x1="10" y1="15" x2="14" y2="15"></line>
                     </svg>
                     Update Wallet
                 </button>
 
-                <!-- Edit Profile Button -->
                 <button type="button" class="btn-edit-profile" id="profileEditBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0  0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
                     Edit Profile
                 </button>
-
-                <!-- Quick Actions -->
-                <div class="profile-actions-section">
-                    <h3 class="section-title">Quick Actions</h3>
-                    
-                    <button type="button" class="profile-action-btn" id="profileFeedbackBtn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <span>Send Feedback</span>
-                    </button>
-                </div>
             </div>
         </div>
-        <!-- End Profile Page -->
+        <!-- End Home Page -->
 
         <!-- Page: Wallet Management -->
         <div class="page" id="walletPage">
@@ -734,62 +685,33 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-page="home" aria-label="Home">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             </svg>
             <span class="nav-label">Home</span>
         </button>
         
-        <button class="nav-item" data-page="profile" aria-label="Profile">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
+        <button class="nav-item" data-page="wallet" aria-label="Wallet">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
             </svg>
-            <span class="nav-label">Profile</span>
-        </button>
-        
-        <button class="nav-item" data-page="merchantSearch" aria-label="Search">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <span class="nav-label">Search</span>
-        </button>
-        
-        <button class="nav-item" data-page="calculator" aria-label="Calculator">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
-                <line x1="9" y1="10" x2="15" y2="10"></line>
-            </svg>
-            <span class="nav-label">Calc</span>
-        </button>
-        
-        <button class="nav-item" data-page="rotating" aria-label="Rotating">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
-            </svg>
-            <span class="nav-label">5%</span>
+            <span class="nav-label">Wallet</span>
         </button>
         
         <button class="nav-item" data-page="recommend" aria-label="Recommend">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
                 <circle cx="12" cy="12" r="2"></circle>
             </svg>
-            <span class="nav-label">Find</span>
-        </button>
-        
-        <button class="nav-item" data-page="compare" aria-label="Compare">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-            </svg>
-            <span class="nav-label">Compare</span>
+            <span class="nav-label">Recommend</span>
         </button>
         
         <button class="nav-item" data-page="settings" aria-label="Settings">
-            <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m5.2-15.4l-4.2 4.2m-6 6l-4.2 4.2m15.4 0l-4.2-4.2m-6-6L3.8 3.8"></path>
             </svg>
             <span class="nav-label">Settings</span>
         </button>

@@ -1279,6 +1279,66 @@ class CardhawkApp {
     document.body.style.overflow = '';
   }
   
+  // Handle merchant search on home page
+  handleMerchantSearch(query) {
+    const resultsDiv = document.getElementById('merchantSearchResults');
+    if (!resultsDiv) return;
+    
+    // Clear if query is empty
+    if (!query || query.trim().length < 2) {
+      resultsDiv.style.display = 'none';
+      resultsDiv.innerHTML = '';
+      return;
+    }
+    
+    // Simple merchant matching (you can enhance this later)
+    const merchants = [
+      { name: 'Starbucks', category: 'dining' },
+      { name: 'Whole Foods', category: 'grocery' },
+      { name: 'Trader Joe\'s', category: 'grocery' },
+      { name: 'Shell Gas Station', category: 'gas' },
+      { name: 'BP Gas Station', category: 'gas' },
+      { name: 'Target', category: 'other' },
+      { name: 'Walmart', category: 'grocery' },
+      { name: 'Amazon', category: 'online_shopping' },
+      { name: 'Chipotle', category: 'dining' },
+      { name: 'McDonald\'s', category: 'dining' }
+    ];
+    
+    const searchTerm = query.toLowerCase();
+    const matches = merchants.filter(m => 
+      m.name.toLowerCase().includes(searchTerm)
+    ).slice(0, 5);
+    
+    if (matches.length === 0) {
+      resultsDiv.innerHTML = '<div class="merchant-result-item">No merchants found</div>';
+      resultsDiv.style.display = 'block';
+      return;
+    }
+    
+    resultsDiv.innerHTML = matches.map(merchant => `
+      <div class="merchant-result-item" data-category="${merchant.category}">
+        <strong>${merchant.name}</strong>
+        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 4px;">
+          Category: ${merchant.category.replace('_', ' ')}
+        </div>
+      </div>
+    `).join('');
+    
+    // Add click handlers
+    resultsDiv.querySelectorAll('.merchant-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const category = item.dataset.category;
+        resultsDiv.style.display = 'none';
+        document.getElementById('merchantSearchInput').value = '';
+        this.getRecommendation(category);
+        this.openRecommendModal();
+      });
+    });
+    
+    resultsDiv.style.display = 'block';
+  }
+  
   // Show category selection view
   showCategoryView() {
     document.getElementById('categoryView').classList.remove('hidden');
@@ -1553,6 +1613,27 @@ class CardhawkApp {
       menuOverlay.addEventListener('click', () => this.closeMenu());
     }
     
+    // Merchant search on home page
+    const merchantSearchInput = document.getElementById('merchantSearchInput');
+    if (merchantSearchInput) {
+      merchantSearchInput.addEventListener('input', (e) => this.handleMerchantSearch(e.target.value));
+      merchantSearchInput.addEventListener('focus', () => {
+        const resultsDiv = document.getElementById('merchantSearchResults');
+        if (resultsDiv && resultsDiv.innerHTML) {
+          resultsDiv.style.display = 'block';
+        }
+      });
+    }
+    
+    // Click outside to close merchant search results
+    document.addEventListener('click', (e) => {
+      const searchContainer = document.querySelector('.merchant-search-container');
+      const resultsDiv = document.getElementById('merchantSearchResults');
+      if (resultsDiv && searchContainer && !searchContainer.contains(e.target)) {
+        resultsDiv.style.display = 'none';
+      }
+    });
+    
     // Recommendation modal
     this.safeAddListener('recommendBtn', 'click', () => this.openRecommendModal());
     this.safeAddListener('closeRecommendBtn', 'click', () => this.closeRecommendModal());
@@ -1657,7 +1738,7 @@ class CardhawkApp {
     
     const walletBackBtn = document.getElementById('walletBackBtn');
     if (walletBackBtn) {
-      walletBackBtn.addEventListener('click', () => this.navigateToPage('profile'));
+      walletBackBtn.addEventListener('click', () => this.navigateToPage('home'));
     }
     
     const profileFeedbackBtn = document.getElementById('profileFeedbackBtn');
@@ -2578,8 +2659,8 @@ class CardhawkApp {
     // Handle page-specific actions
     if (pageName === 'rotating') {
       this.renderRotatingCategories();
-    } else if (pageName === 'profile') {
-      this.updateUserProfile();
+    } else if (pageName === 'home') {
+      this.updateUserProfile(); // Update stats on home page now
     } else if (pageName === 'wallet') {
       this.renderWalletPage();
     }
