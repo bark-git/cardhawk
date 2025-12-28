@@ -265,21 +265,42 @@
         
         // Check authentication
         async function checkAuth() {
-            const { data: { user } } = await supabase.auth.getUser();
-            
-            if (!user) {
+            try {
+                // Try to get current session
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    console.error('Session error:', error);
+                }
+                
+                const user = session?.user;
+                
+                if (!user) {
+                    document.getElementById('authCheck').innerHTML = `
+                        <div class="error">
+                            <strong>Access Denied</strong>
+                            <p>You must be logged in to access this page.</p>
+                            <p><a href="/" style="color: #CD9935;">Go back to login</a></p>
+                        </div>
+                    `;
+                    return false;
+                }
+                
+                console.log('Logged in as:', user.email);
+                
+                document.getElementById('authCheck').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                return true;
+            } catch (error) {
+                console.error('Auth check error:', error);
                 document.getElementById('authCheck').innerHTML = `
                     <div class="error">
-                        <strong>Access Denied</strong>
-                        <p>You must be logged in as an admin to access this page.</p>
+                        <strong>Error</strong>
+                        <p>Failed to check authentication: ${error.message}</p>
                     </div>
                 `;
                 return false;
             }
-            
-            document.getElementById('authCheck').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-            return true;
         }
         
         // Load waitlist stats

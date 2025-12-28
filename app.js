@@ -1999,10 +1999,12 @@ class CardhawkApp {
           if (data && data.length > 0) {
             const result = data[0];
             if (result.success) {
-              alert(`✅ Success! You're #${result.position} on the waitlist.\n\nWe'll email you at ${email} when you're approved!`);
+              alert(`✅ Success! You're #${result.queue_position} on the waitlist.\n\nWe'll email you at ${email} when you're approved!`);
             } else {
               alert(result.message);
             }
+          } else {
+            alert('Joined waitlist successfully!');
           }
         } catch (error) {
           console.error('Waitlist error:', error);
