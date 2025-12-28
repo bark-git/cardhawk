@@ -1265,13 +1265,19 @@ body.theme-bold .indicator.active {
 .modal-content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-lg);
+  padding: var(--space-md);
+}
+
+@media (min-width: 769px) {
+  .modal-content {
+    padding: var(--space-lg);
+  }
 }
 
 .modal-subtitle {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: var(--text-secondary);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
   text-align: center;
 }
 
@@ -2273,18 +2279,18 @@ body.theme-bold .nav-label {
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
-  padding: 0 10%;
+  padding: 0 15%;
 }
 
 @media (max-width: 768px) {
   .profile-stats-grid {
-    padding: 0 10%;
+    padding: 0 12%;
   }
 }
 
 @media (max-width: 480px) {
   .profile-stats-grid {
-    padding: 0 5%;
+    padding: 0 8%;
   }
 }
 
@@ -2743,7 +2749,7 @@ body.dark-mode .toggle-slider-small {
   font-size: 2rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
   text-align: center;
 }
 
@@ -2754,7 +2760,7 @@ body.theme-bold .settings-title {
 }
 
 .settings-section {
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
 .settings-section-title {
@@ -2764,6 +2770,10 @@ body.theme-bold .settings-title {
   color: var(--text-primary);
   margin-bottom: var(--space-md);
   padding-left: var(--space-sm);
+}
+
+.settings-section-title.bold {
+  font-weight: 700;
 }
 
 body.theme-bold .settings-section-title {
@@ -2971,6 +2981,10 @@ body.theme-bold.dark-mode .settings-action-btn {
 .settings-action-btn.danger {
   border-color: rgba(239, 68, 68, 0.3);
   color: #DC2626;
+}
+
+.settings-action-btn.danger-outline + .settings-action-btn.danger {
+  margin-top: var(--space-md);
 }
 
 .settings-action-btn.danger:hover {
@@ -5403,13 +5417,13 @@ body.dark-mode .settings-action-btn.secondary {
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .feedback-form .input-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 0.375rem;
 }
 
 .feedback-form .input-label {
@@ -5481,17 +5495,35 @@ body.dark-mode .feedback-form textarea {
 /* Mobile optimization for feedback modal */
 @media (max-width: 768px) {
   .modal-container {
-    max-height: 85vh;
-    margin: auto 1rem;
+    max-height: 80vh;
+    margin: auto 0.75rem;
+  }
+  
+  .modal-header {
+    padding: var(--space-md);
+  }
+  
+  .modal-header h2 {
+    font-size: 1.25rem;
   }
   
   .modal-content {
-    padding: var(--space-md);
-    padding-bottom: var(--space-xl); /* Extra space for buttons */
+    padding: var(--space-sm) var(--space-md);
   }
   
   .feedback-form textarea {
-    max-height: 120px; /* Limit textarea height on mobile */
+    max-height: 100px;
+    min-height: 80px;
+    rows: 4;
+  }
+  
+  .feedback-form .input-label {
+    font-size: 0.875rem;
+  }
+  
+  .modal-actions {
+    margin-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
   }
 }
 

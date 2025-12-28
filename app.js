@@ -93,6 +93,7 @@ class CardhawkApp {
         this.renderQuickCategories();
         this.renderMenuDrawer();
         this.updateUserProfile();
+        this.showWelcomeMessage(); // Show welcome with user's name
       } else {
         console.log('ℹ️ No active session, showing welcome screen');
         // Show welcome screen for new users
@@ -140,6 +141,7 @@ class CardhawkApp {
           this.renderQuickCategories();
           this.renderMenuDrawer();
           this.updateUserProfile();
+          this.showWelcomeMessage(); // Show welcome with correct name
         } else if (event === 'SIGNED_OUT') {
           this.currentUser = null;
           this.userCards = [];
@@ -1071,9 +1073,13 @@ class CardhawkApp {
   }
   
   showComparisonResults() {
+    console.log('showComparisonResults called with cards:', this.selectedCompareCards);
+    
     // Don't hide selection - show results inline in the results panel
     const placeholder = document.querySelector('.comparison-placeholder');
     const resultsTable = document.getElementById('comparisonTable');
+    
+    console.log('placeholder:', placeholder, 'resultsTable:', resultsTable);
     
     if (placeholder) placeholder.classList.add('hidden');
     if (resultsTable) resultsTable.classList.remove('hidden');
@@ -2236,6 +2242,9 @@ class CardhawkApp {
   // Page Navigation
   navigateToPage(pageName) {
     this.currentPage = pageName;
+    
+    // Scroll to top when navigating to any page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
     // Handle welcome message - show on first home visit, hide after leaving
     const welcomeMessage = document.getElementById('welcomeMessage');
