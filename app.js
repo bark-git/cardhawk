@@ -999,6 +999,8 @@ class CardhawkApp {
   
   renderQuickCategories() {
     const container = document.getElementById('quickCategoryGrid');
+    if (!container) return; // Quick categories may not exist on all pages
+    
     container.innerHTML = '';
     
     this.quickCategories.forEach(cat => {
@@ -1053,7 +1055,10 @@ class CardhawkApp {
   }
   
   openCustomizeCategories() {
-    document.getElementById('customizeCategoriesOverlay').classList.add('active');
+    const overlay = document.getElementById('customizeCategoriesOverlay');
+    if (!overlay) return;
+    
+    overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
     
     // Pre-select current categories
@@ -1075,7 +1080,8 @@ class CardhawkApp {
   }
   
   closeCustomizeCategories() {
-    document.getElementById('customizeCategoriesOverlay').classList.remove('active');
+    const overlay = document.getElementById('customizeCategoriesOverlay');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
   }
   
@@ -1269,8 +1275,11 @@ class CardhawkApp {
   
   // Open recommendation modal
   openRecommendModal() {
+    const overlay = document.getElementById('recommendOverlay');
+    if (!overlay) return;
+    
     this.recommendModalOpen = true;
-    document.getElementById('recommendOverlay').classList.add('active');
+    overlay.classList.add('active');
     this.showCategoryView();
     document.body.style.overflow = 'hidden';
   }
@@ -1278,7 +1287,8 @@ class CardhawkApp {
   // Close recommendation modal
   closeRecommendModal() {
     this.recommendModalOpen = false;
-    document.getElementById('recommendOverlay').classList.remove('active');
+    const overlay = document.getElementById('recommendOverlay');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
   }
   
@@ -1664,14 +1674,18 @@ class CardhawkApp {
     // Theme toggle in menu
     this.safeAddListener('menuLuxuryBtn', 'click', () => {
       this.setTheme('luxury');
-      document.getElementById('menuLuxuryBtn').classList.add('active');
-      document.getElementById('menuBoldBtn').classList.remove('active');
+      const luxuryBtn = document.getElementById('menuLuxuryBtn');
+      const boldBtn = document.getElementById('menuBoldBtn');
+      if (luxuryBtn) luxuryBtn.classList.add('active');
+      if (boldBtn) boldBtn.classList.remove('active');
     });
     
     this.safeAddListener('menuBoldBtn', 'click', () => {
       this.setTheme('bold');
-      document.getElementById('menuBoldBtn').classList.add('active');
-      document.getElementById('menuLuxuryBtn').classList.remove('active');
+      const boldBtn = document.getElementById('menuBoldBtn');
+      const luxuryBtn = document.getElementById('menuLuxuryBtn');
+      if (boldBtn) boldBtn.classList.add('active');
+      if (luxuryBtn) luxuryBtn.classList.remove('active');
     });
     
     // Point value inputs (event delegation)
@@ -2414,24 +2428,28 @@ class CardhawkApp {
       }
     });
     
-    // Touch/swipe gestures
+    // Touch/swipe gestures (only if carousel exists)
     const carousel = document.querySelector('.card-carousel');
     const track = document.getElementById('carouselTrack');
     
-    carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-    carousel.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
-    carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+    if (carousel && track) {
+      carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+      carousel.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+      carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+      
+      // Mouse drag (for desktop testing)
+      track.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+      document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+      document.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+    }
     
-    // Mouse drag (for desktop testing)
-    track.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-    document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-    document.addEventListener('mouseup', (e) => this.handleMouseUp(e));
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') this.prevCard();
-      if (e.key === 'ArrowRight') this.nextCard();
-    });
+    // Keyboard navigation (only if carousel exists)
+    if (carousel) {
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') this.prevCard();
+        if (e.key === 'ArrowRight') this.nextCard();
+      });
+    }
   }
   
   // Touch Handlers
@@ -2797,6 +2815,8 @@ class CardhawkApp {
     
     // Show loading state
     const calculateBtn = document.getElementById('calculateBtn');
+    if (!calculateBtn) return; // Calculator page may not exist
+    
     calculateBtn.classList.add('loading');
     calculateBtn.disabled = true;
     
