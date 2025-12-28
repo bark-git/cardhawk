@@ -378,6 +378,8 @@ class CardhawkApp {
   // Render all cards in the carousel
   renderCards() {
     const track = document.getElementById('carouselTrack');
+    if (!track) return; // Carousel removed from home page
+    
     track.innerHTML = '';
     
     // Show only first N cards
@@ -591,6 +593,8 @@ class CardhawkApp {
   // Render indicator dots
   renderIndicators() {
     const indicatorsDiv = document.getElementById('indicators');
+    if (!indicatorsDiv) return; // Carousel removed from home page
+    
     indicatorsDiv.innerHTML = '';
     
     this.cards.forEach((_, index) => {
@@ -1543,6 +1547,8 @@ class CardhawkApp {
   updateNavButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    
+    if (!prevBtn || !nextBtn) return; // Carousel removed
     
     prevBtn.disabled = this.currentCardIndex === 0;
     nextBtn.disabled = this.currentCardIndex === this.cards.length - 1;
