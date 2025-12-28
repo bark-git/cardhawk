@@ -184,7 +184,6 @@ class CardhawkApp {
     // Profile page elements
     const profileUserName = document.getElementById('profileUserName');
     const profileUserEmail = document.getElementById('profileUserEmail');
-    const profileEditBtn = document.getElementById('profileEditBtn');
     
     if (this.currentUser) {
       // Settings page
@@ -1741,24 +1740,11 @@ class CardhawkApp {
       walletBackBtn.addEventListener('click', () => this.navigateToPage('home'));
     }
     
-    const profileFeedbackBtn = document.getElementById('profileFeedbackBtn');
-    if (profileFeedbackBtn) {
-      profileFeedbackBtn.addEventListener('click', () => this.showFeedbackModal());
-    }
-    
     // Menu Popup
     if (menuBtn) {
       menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.toggleMenuPopup();
-      });
-    }
-    
-    const menuProfileBtn = document.getElementById('menuProfileBtn');
-    if (menuProfileBtn) {
-      menuProfileBtn.addEventListener('click', () => {
-        this.closeMenuPopup();
-        this.navigateToPage('profile');
       });
     }
     
@@ -2406,16 +2392,6 @@ class CardhawkApp {
       });
     }
     
-    // Merchant search input
-    const merchantSearchInput = document.getElementById('merchantSearchInput');
-    if (merchantSearchInput) {
-      merchantSearchInput.addEventListener('input', (e) => {
-        const query = e.target.value;
-        const results = this.searchMerchants(query);
-        this.renderMerchantResults(results);
-      });
-    }
-    
     // Spending calculator
     const calculateBtn = document.getElementById('calculateBtn');
     if (calculateBtn) {
@@ -2778,116 +2754,6 @@ class CardhawkApp {
   
   
   // Merchant Search Database
-  getMerchantDatabase() {
-    return [
-      { name: 'Starbucks', category: 'dining', type: 'Coffee Shop', codes: 'Dining/Restaurants' },
-      { name: 'Chipotle', category: 'dining', type: 'Fast Casual', codes: 'Dining/Restaurants' },
-      { name: 'McDonalds', category: 'dining', type: 'Fast Food', codes: 'Dining/Restaurants' },
-      { name: 'Whole Foods', category: 'grocery', type: 'Supermarket', codes: 'Grocery Stores' },
-      { name: 'Trader Joes', category: 'grocery', type: 'Supermarket', codes: 'Grocery Stores' },
-      { name: 'Safeway', category: 'grocery', type: 'Supermarket', codes: 'Grocery Stores' },
-      { name: 'Kroger', category: 'grocery', type: 'Supermarket', codes: 'Grocery Stores' },
-      { name: 'Costco', category: 'other', type: 'Warehouse Club', codes: 'Wholesale/Warehouse (NOT Grocery!)' },
-      { name: 'Sams Club', category: 'other', type: 'Warehouse Club', codes: 'Wholesale/Warehouse' },
-      { name: 'Target', category: 'other', type: 'General Merchandise', codes: 'Superstores' },
-      { name: 'Walmart', category: 'other', type: 'General Merchandise', codes: 'Superstores' },
-      { name: 'Amazon', category: 'other', type: 'Online Retail', codes: 'Digital/Online Shopping' },
-      { name: 'United Airlines', category: 'flights', type: 'Airline', codes: 'Airlines/Air Travel' },
-      { name: 'Delta Air Lines', category: 'flights', type: 'Airline', codes: 'Airlines/Air Travel' },
-      { name: 'American Airlines', category: 'flights', type: 'Airline', codes: 'Airlines/Air Travel' },
-      { name: 'Southwest Airlines', category: 'flights', type: 'Airline', codes: 'Airlines/Air Travel' },
-      { name: 'Marriott', category: 'hotels', type: 'Hotel Chain', codes: 'Lodging/Hotels' },
-      { name: 'Hilton', category: 'hotels', type: 'Hotel Chain', codes: 'Lodging/Hotels' },
-      { name: 'Hyatt', category: 'hotels', type: 'Hotel Chain', codes: 'Lodging/Hotels' },
-      { name: 'Shell', category: 'gas', type: 'Gas Station', codes: 'Service Stations/Gas' },
-      { name: 'Chevron', category: 'gas', type: 'Gas Station', codes: 'Service Stations/Gas' },
-      { name: 'BP', category: 'gas', type: 'Gas Station', codes: 'Service Stations/Gas' },
-      { name: 'Exxon', category: 'gas', type: 'Gas Station', codes: 'Service Stations/Gas' },
-      { name: 'Uber', category: 'other', type: 'Rideshare', codes: 'Transportation/Taxi Services' },
-      { name: 'Lyft', category: 'other', type: 'Rideshare', codes: 'Transportation/Taxi Services' },
-      { name: 'DoorDash', category: 'dining', type: 'Food Delivery', codes: 'Dining/Food Delivery' },
-      { name: 'Uber Eats', category: 'dining', type: 'Food Delivery', codes: 'Dining/Food Delivery' },
-      { name: 'Grubhub', category: 'dining', type: 'Food Delivery', codes: 'Dining/Food Delivery' },
-      { name: 'Netflix', category: 'other', type: 'Streaming', codes: 'Digital Entertainment/Streaming' },
-      { name: 'Spotify', category: 'other', type: 'Streaming', codes: 'Digital Entertainment/Streaming' },
-      { name: 'Apple', category: 'other', type: 'Technology/Retail', codes: 'Electronics/Computers' },
-      { name: 'Best Buy', category: 'other', type: 'Electronics', codes: 'Electronics/Computers' },
-      { name: 'Home Depot', category: 'other', type: 'Home Improvement', codes: 'Hardware/Home Improvement' },
-      { name: 'Lowes', category: 'other', type: 'Home Improvement', codes: 'Hardware/Home Improvement' },
-      { name: 'CVS', category: 'other', type: 'Pharmacy', codes: 'Drug Stores/Pharmacies' },
-      { name: 'Walgreens', category: 'other', type: 'Pharmacy', codes: 'Drug Stores/Pharmacies' }
-    ];
-  }
-  
-  searchMerchants(query) {
-    if (!query || query.length < 2) return [];
-    
-    const merchants = this.getMerchantDatabase();
-    const lowerQuery = query.toLowerCase();
-    
-    return merchants.filter(merchant => 
-      merchant.name.toLowerCase().includes(lowerQuery) ||
-      merchant.type.toLowerCase().includes(lowerQuery)
-    ).slice(0, 10);
-  }
-  
-  renderMerchantResults(merchants) {
-    const container = document.getElementById('merchantSearchResults');
-    
-    if (merchants.length === 0) {
-      container.innerHTML = `
-        <div class="no-merchant-results">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <p>No merchants found. Try "Starbucks", "Target", or "Shell"</p>
-        </div>
-      `;
-      return;
-    }
-    
-    container.innerHTML = merchants.map(merchant => {
-      const activeCards = this.cards.filter(card => this.isCardActive(card.id));
-      const recommendations = this.calculateRecommendations(activeCards, merchant.category, 100);
-      const bestCard = recommendations[0];
-      
-      return `
-        <div class="merchant-result-card">
-          <div class="merchant-header">
-            <div class="merchant-info">
-              <h3 class="merchant-name">${merchant.name}</h3>
-              <div class="merchant-meta">
-                <span class="merchant-type">${merchant.type}</span>
-                <span class="merchant-separator">•</span>
-                <span class="merchant-codes">${merchant.codes}</span>
-              </div>
-            </div>
-            <div class="merchant-category-badge">
-              ${this.getCategoryIconSVG(merchant.category)}
-            </div>
-          </div>
-          
-          ${bestCard ? `
-            <div class="merchant-recommendation">
-              <div class="recommendation-label">Best Card:</div>
-              <div class="recommendation-card">
-                <div class="recommendation-card-name">${bestCard.card.displayName}</div>
-                <div class="recommendation-value">${bestCard.dollarValue.toFixed(2)}¢ per $1</div>
-              </div>
-              <div class="recommendation-detail">
-                ${bestCard.earningRate}x points = $${bestCard.dollarValue.toFixed(2)} per $100
-              </div>
-            </div>
-          ` : `
-            <div class="merchant-no-cards">
-              <p>Add cards to see recommendations</p>
-            </div>
-          `}
-        </div>
-      `;
-    }).join('');
-  }
   
   getCategoryName(category) {
     const names = {
