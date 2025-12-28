@@ -1932,8 +1932,22 @@ class CardhawkApp {
             }
           }
           
+          // Reset form and button
+          signupForm.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Account';
+          
           this.closeSignupScreen();
-          this.showSuccessMessage('Account created! Check your email to verify your account, then login.');
+          
+          // Check if email confirmation is required
+          const needsConfirmation = signupData.user && !signupData.session;
+          
+          if (needsConfirmation) {
+            this.showSuccessMessage('Account created! Check your email to verify your account, then login.');
+          } else {
+            this.showSuccessMessage('Account created successfully! You can now login.');
+          }
+          
           setTimeout(() => this.showLoginScreen(), 2000);
           
         } catch (error) {
