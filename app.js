@@ -75,6 +75,13 @@ class CardhawkApp {
         console.log('✅ User logged in:', user.email);
         this.currentUser = user;
         
+        // CHECK ACCESS (Waitlist or Beta Code)
+        const hasAccess = await this.checkUserAccess(user.email);
+        if (!hasAccess) {
+          // User doesn't have access - sign them out and show welcome
+          return; // checkUserAccess already signed them out
+        }
+        
         // Try to migrate localStorage data if this is first login
         const migrated = localStorage.getItem('cardhawk-migrated');
         if (migrated !== 'true') {
@@ -130,6 +137,14 @@ class CardhawkApp {
           }
         } else if (event === 'SIGNED_IN' && session) {
           this.currentUser = session.user;
+          
+          // CHECK ACCESS (Waitlist or Beta Code)
+          const hasAccess = await this.checkUserAccess(session.user.email);
+          if (!hasAccess) {
+            // User doesn't have access - sign them out
+            return; // checkUserAccess already signed them out
+          }
+          
           await this.loadUserDataFromSupabase();
           this.closeWelcomeScreen();
           this.closeLoginScreen();
@@ -237,6 +252,87 @@ class CardhawkApp {
     // Update name and show message
     welcomeName.textContent = displayName;
     welcomeMessage.style.display = 'flex';
+  }
+  
+  async checkUserAccess(userEmail) {
+    try {
+      const { supabase } = await import('./supabase-client.js');
+      
+      // Call Supabase function to check access
+      const { data, error } = await supabase.rpc('check_user_access', {
+        p_email: userEmail
+      });
+      
+      if (error) {
+        console.error('Error checking access:', error);
+        // On error, allow access (fail open)
+        return true;
+      }
+      
+      if (!data || data.length === 0) {
+        console.error('No access data returned');
+        return true; // Fail open
+      }
+      
+      const accessCheck = data[0];
+      
+      if (accessCheck.has_access) {
+        // User has access!
+        console.log(`Access granted via: ${accessCheck.access_method}`);
+        
+        // If they used a beta code, auto-approve them
+        if (this.currentUser?.user_metadata?.beta_code_used) {
+          await this.autoApproveBetaCodeUser(userEmail, this.currentUser.user_metadata.beta_code_used);
+        }
+        
+        return true;
+      } else {
+        // User does NOT have access
+        console.log(`Access denied: ${accessCheck.message}`);
+        
+        // Sign them out
+        await supabase.auth.signOut();
+        
+        // Show appropriate message
+        this.showAccessDeniedMessage(accessCheck);
+        
+        return false;
+      }
+    } catch (error) {
+      console.error('Error in checkUserAccess:', error);
+      // On error, allow access (fail open)
+      return true;
+    }
+  }
+  
+  async autoApproveBetaCodeUser(email, betaCode) {
+    try {
+      const { supabase } = await import('./supabase-client.js');
+      
+      // Add to approved_users if not already there
+      await supabase.from('approved_users').insert({
+        email: email,
+        approval_method: 'beta_code',
+        approved_by: 'system',
+        notes: `Auto-approved via beta code: ${betaCode}`
+      }).onConflict('email').ignore();
+      
+      console.log('Auto-approved beta code user:', email);
+    } catch (error) {
+      console.error('Error auto-approving user:', error);
+    }
+  }
+  
+  showAccessDeniedMessage(accessCheck) {
+    // Create a nice modal showing their status
+    const message = accessCheck.access_method === 'waitlist_pending' 
+      ? `🎉 You're on the waitlist!\n\n${accessCheck.message}\n\nWe'll email you as soon as you're approved!`
+      : `⏳ Cardhawk is in Private Beta\n\n${accessCheck.message}\n\nVisit cardhawk.com to join the waitlist!`;
+    
+    alert(message);
+    
+    // Show welcome screen
+    this.showWelcomeScreen();
   }
   
   async loadUserDataFromSupabase() {
@@ -1808,13 +1904,22 @@ class CardhawkApp {
           
           if (signupError) throw signupError;
           
-          // After successful signup, consume the beta code
+          // After successful signup, consume the beta code AND auto-approve user
           if (signupData.user) {
+            // Consume the beta code
             await supabase.rpc('consume_beta_code', {
               p_code: betaCode,
               p_user_id: signupData.user.id,
               p_user_email: email
             });
+            
+            // Auto-approve user (so they can login with OAuth later too)
+            await supabase.from('approved_users').insert({
+              email: email,
+              approval_method: 'beta_code',
+              approved_by: 'system',
+              notes: `Beta code: ${betaCode}`
+            }).onConflict('email').ignore();
           }
           
           this.closeSignupScreen();
@@ -1840,11 +1945,45 @@ class CardhawkApp {
     }
     
     // Join waitlist link
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
       if (e.target && e.target.id === 'joinWaitlistLink') {
         e.preventDefault();
-        // For now, just show an alert. Later, this can open a waitlist modal or redirect to landing page
-        alert('Waitlist coming soon! For now, contact us at hello@cardhawk.app to request a beta code.');
+        
+        // Prompt for email
+        const email = prompt('Enter your email to join the waitlist:');
+        if (!email || !email.includes('@')) {
+          alert('Please enter a valid email address');
+          return;
+        }
+        
+        try {
+          const { supabase } = await import('./supabase-client.js');
+          
+          // Join waitlist
+          const { data, error } = await supabase.rpc('join_waitlist', {
+            p_email: email,
+            p_name: null,
+            p_source: 'signup_form'
+          });
+          
+          if (error) {
+            alert('Error joining waitlist. Please try again.');
+            console.error(error);
+            return;
+          }
+          
+          if (data && data.length > 0) {
+            const result = data[0];
+            if (result.success) {
+              alert(`✅ Success! You're #${result.position} on the waitlist.\n\nWe'll email you at ${email} when you're approved!`);
+            } else {
+              alert(result.message);
+            }
+          }
+        } catch (error) {
+          console.error('Waitlist error:', error);
+          alert('Error joining waitlist. Please try again.');
+        }
       }
     });
     

@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beta Code Admin - Cardhawk</title>
+    <title>Admin - Cardhawk</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -19,21 +15,9 @@
             min-height: 100vh;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            color: #CD9935;
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-        }
-        
-        .subtitle {
-            color: #999;
-            margin-bottom: 2rem;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: #CD9935; margin-bottom: 0.5rem; font-size: 2rem; }
+        .subtitle { color: #999; margin-bottom: 2rem; }
         
         .section {
             background: #2a2a2a;
@@ -59,17 +43,8 @@
             margin-bottom: 1rem;
         }
         
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        label {
-            color: #ccc;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        label { color: #ccc; font-size: 0.875rem; font-weight: 600; }
         
         input, select {
             background: #1a1a1a;
@@ -80,10 +55,7 @@
             font-size: 1rem;
         }
         
-        input:focus, select:focus {
-            outline: none;
-            border-color: #CD9935;
-        }
+        input:focus, select:focus { outline: none; border-color: #CD9935; }
         
         button {
             background: linear-gradient(135deg, #CD9935, #E5B558);
@@ -97,15 +69,8 @@
             transition: transform 0.2s;
         }
         
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        button:hover { transform: translateY(-2px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         .btn-secondary {
             background: transparent;
@@ -144,9 +109,7 @@
             font-weight: 600;
         }
         
-        tr:hover {
-            background: #333;
-        }
+        tr:hover { background: #333; }
         
         .badge {
             display: inline-block;
@@ -156,71 +119,105 @@
             font-weight: 600;
         }
         
-        .badge-active {
-            background: #22c55e;
-            color: white;
+        .badge-active { background: #22c55e; color: white; }
+        .badge-inactive { background: #ef4444; color: white; }
+        .badge-pending { background: #f59e0b; color: white; }
+        .badge-approved { background: #22c55e; color: white; }
+        .badge-founder { background: #CD9935; color: white; }
+        .badge-general { background: #3b82f6; color: white; }
+        .badge-influencer { background: #a855f7; color: white; }
+        
+        .loading { text-align: center; padding: 2rem; color: #999; }
+        .error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .success { background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; color: #22c55e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         
-        .badge-inactive {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .badge-founder {
-            background: #CD9935;
-            color: white;
-        }
-        
-        .badge-general {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .badge-influencer {
-            background: #a855f7;
-            color: white;
-        }
-        
-        .loading {
+        .stat-card {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 8px;
             text-align: center;
-            padding: 2rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #CD9935;
+        }
+        
+        .stat-label {
             color: #999;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
         
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        
-        .success {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid #22c55e;
+        .action-btn {
+            background: transparent;
+            border: 1px solid #444;
             color: #22c55e;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔐 Beta Code Admin</h1>
-        <p class="subtitle">Generate and manage beta access codes for Cardhawk</p>
+        <h1>🔐 Cardhawk Admin</h1>
+        <p class="subtitle">Manage waitlist, beta codes, and access control</p>
         
         <div id="authCheck" class="loading">
             Checking authentication...
         </div>
         
         <div id="adminContent" style="display: none;">
-            <!-- Generate Code Section -->
+            <!-- Waitlist Management Section -->
             <div class="section">
-                <h2 class="section-title">
-                    ✨ Generate New Code
-                </h2>
+                <h2 class="section-title">📋 Waitlist Management</h2>
+                
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingCount">-</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="approvedCount" style="color: #22c55e;">-</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCount" style="color: #3b82f6;">-</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="signupsToday" style="color: #f59e0b;">-</div>
+                        <div class="stat-label">Signups Today</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <button id="approveNext10">Approve Next 10</button>
+                    <button id="approveNext50">Approve Next 50</button>
+                    <button class="btn-secondary" id="refreshWaitlist">Refresh</button>
+                </div>
+                
+                <div id="waitlistTable"></div>
+            </div>
+            
+            <!-- Beta Codes Section -->
+            <div class="section">
+                <h2 class="section-title">✨ Generate Beta Code</h2>
                 
                 <form id="generateForm">
                     <div class="form-grid">
@@ -254,11 +251,9 @@
                 </div>
             </div>
             
-            <!-- Code Statistics -->
+            <!-- Beta Code Statistics -->
             <div class="section">
-                <h2 class="section-title">
-                    📊 Code Statistics
-                </h2>
+                <h2 class="section-title">📊 Beta Code Statistics</h2>
                 <button class="btn-secondary" id="refreshStats">Refresh</button>
                 <div id="statsTable"></div>
             </div>
@@ -282,12 +277,124 @@
                 return false;
             }
             
-            // You can add additional admin check here if needed
-            // For now, any logged-in user can access
-            
             document.getElementById('authCheck').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
             return true;
+        }
+        
+        // Load waitlist stats
+        async function loadWaitlistStats() {
+            try {
+                const { data, error } = await supabase
+                    .from('waitlist_stats')
+                    .select('*')
+                    .single();
+                
+                if (error) throw error;
+                
+                document.getElementById('pendingCount').textContent = data.pending_count || 0;
+                document.getElementById('approvedCount').textContent = data.approved_count || 0;
+                document.getElementById('totalCount').textContent = data.total_count || 0;
+                document.getElementById('signupsToday').textContent = data.signups_today || 0;
+                
+            } catch (error) {
+                console.error('Error loading waitlist stats:', error);
+            }
+        }
+        
+        // Load waitlist table
+        async function loadWaitlist() {
+            try {
+                const { data, error } = await supabase
+                    .from('waitlist')
+                    .select('*')
+                    .order('signed_up_at', { ascending: false })
+                    .limit(50);
+                
+                if (error) throw error;
+                
+                const tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Source</th>
+                                <th>Signed Up</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(user => `
+                                <tr>
+                                    <td style="font-family: monospace;">${user.email}</td>
+                                    <td>${user.name || '-'}</td>
+                                    <td><span class="badge badge-${user.status}">${user.status}</span></td>
+                                    <td>${user.source}</td>
+                                    <td>${new Date(user.signed_up_at).toLocaleDateString()}</td>
+                                    <td>
+                                        ${user.status === 'pending' ? `
+                                            <button class="action-btn" onclick="window.approveUser('${user.email}')">
+                                                ✅ Approve
+                                            </button>
+                                        ` : ''}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('waitlistTable').innerHTML = tableHTML;
+                
+            } catch (error) {
+                document.getElementById('waitlistTable').innerHTML = `
+                    <div class="error">Error loading waitlist: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // Approve single user
+        window.approveUser = async function(email) {
+            if (!confirm(`Approve ${email}?`)) return;
+            
+            try {
+                const { error } = await supabase.rpc('approve_waitlist_user', {
+                    p_email: email,
+                    p_approved_by: 'admin'
+                });
+                
+                if (error) throw error;
+                
+                alert(`✅ Approved: ${email}`);
+                await loadWaitlistStats();
+                await loadWaitlist();
+                
+            } catch (error) {
+                alert('Error approving user: ' + error.message);
+            }
+        };
+        
+        // Approve batch
+        async function approveBatch(size) {
+            if (!confirm(`Approve next ${size} users?`)) return;
+            
+            try {
+                const { data, error } = await supabase.rpc('approve_next_batch', {
+                    p_batch_size: size,
+                    p_approved_by: 'admin'
+                });
+                
+                if (error) throw error;
+                
+                alert(`✅ Approved ${data.length} users`);
+                await loadWaitlistStats();
+                await loadWaitlist();
+                
+            } catch (error) {
+                alert('Error approving batch: ' + error.message);
+            }
         }
         
         // Generate code
@@ -312,14 +419,10 @@
                 
                 if (error) throw error;
                 
-                // Display the new code
                 document.getElementById('newCodeDisplay').textContent = data;
                 document.getElementById('generatedCode').style.display = 'block';
                 
-                // Refresh stats
                 await loadStats();
-                
-                // Reset form
                 e.target.reset();
                 
             } catch (error) {
@@ -330,7 +433,7 @@
             }
         });
         
-        // Load stats
+        // Load beta code stats
         async function loadStats() {
             try {
                 const { data, error } = await supabase
@@ -378,12 +481,20 @@
             }
         }
         
-        // Refresh button
+        // Event listeners
+        document.getElementById('approveNext10').addEventListener('click', () => approveBatch(10));
+        document.getElementById('approveNext50').addEventListener('click', () => approveBatch(50));
+        document.getElementById('refreshWaitlist').addEventListener('click', async () => {
+            await loadWaitlistStats();
+            await loadWaitlist();
+        });
         document.getElementById('refreshStats').addEventListener('click', loadStats);
         
         // Initialize
         checkAuth().then(isAuth => {
             if (isAuth) {
+                loadWaitlistStats();
+                loadWaitlist();
                 loadStats();
             }
         });
