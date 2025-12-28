@@ -310,12 +310,17 @@ class CardhawkApp {
       const { supabase } = await import('./supabase-client.js');
       
       // Add to approved_users if not already there
-      await supabase.from('approved_users').insert({
+      const { error } = await supabase.from('approved_users').insert({
         email: email,
         approval_method: 'beta_code',
         approved_by: 'system',
         notes: `Auto-approved via beta code: ${betaCode}`
-      }).onConflict('email').ignore();
+      });
+      
+      // Ignore duplicate key errors (user already approved)
+      if (error && error.code !== '23505') {
+        throw error;
+      }
       
       console.log('Auto-approved beta code user:', email);
     } catch (error) {
@@ -1914,12 +1919,17 @@ class CardhawkApp {
             });
             
             // Auto-approve user (so they can login with OAuth later too)
-            await supabase.from('approved_users').insert({
-              email: email,
-              approval_method: 'beta_code',
-              approved_by: 'system',
-              notes: `Beta code: ${betaCode}`
-            }).onConflict('email').ignore();
+            try {
+              await supabase.from('approved_users').insert({
+                email: email,
+                approval_method: 'beta_code',
+                approved_by: 'system',
+                notes: `Beta code: ${betaCode}`
+              });
+            } catch (approveError) {
+              // Ignore if already exists
+              console.log('User already approved or error:', approveError);
+            }
           }
           
           this.closeSignupScreen();
